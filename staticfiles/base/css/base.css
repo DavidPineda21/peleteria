@@ -1,0 +1,1859 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #ffffff;
+    min-height: 100vh;
+    padding-top: 80px;
+    padding-bottom: 0;
+    display: flex;
+    flex-direction: column;
+}
+/* ############################################################################################################################
+/* Navbar con efecto Liquid Glass */
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 70px;
+    background: rgba(14, 56, 35, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(14, 34, 56, 0.37);
+    z-index: 1001;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0 40px;
+    gap: 25px;
+    transition: all 0.3s ease;
+}
+
+/* Efecto hover en navbar */
+nav::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
+    pointer-events: none;
+}
+
+/* Logo */
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo-img {
+    height: 45px;
+    width: auto;
+    filter: brightness(0) invert(1);
+    transition: all 0.3s ease;
+}
+
+.logo-img:hover {
+    transform: scale(1.05);
+}
+
+/* Menu Items */
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 15px;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-links li {
+    position: relative;
+}
+
+.nav-links li a {
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 0;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.nav-links li a:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+/* Menu Toggle con ícono - Diseño destacado */
+.menu-toggle {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    position: relative !important;
+    cursor: pointer !important;
+    padding: 10px 16px !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2)) !important;
+    border: 2px solid rgba(102, 126, 234, 0.4) !important;
+    border-radius: 10px !important;
+    box-shadow: 0 3px 12px rgba(102, 126, 234, 0.2) !important;
+    transition: all 0.3s ease !important;
+}
+
+.menu-toggle:hover {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.3)) !important;
+    border-color: rgba(102, 126, 234, 0.6) !important;
+    box-shadow: 0 4px 16px rgba(102, 126, 234, 0.35) !important;
+}
+
+.menu-toggle i:first-child {
+    font-size: 18px;
+}
+
+.menu-toggle span {
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+.menu-toggle .arrow {
+    font-size: 12px;
+    transition: transform 0.3s ease;
+}
+
+.has-dropdown.active .menu-toggle .arrow {
+    transform: rotate(180deg);
+}
+
+/* Dropdown Mega Menu */
+.dropdown-mega {
+    position: fixed;
+    top: 70px;
+    left: 0;
+    right: 0;
+    width: 100%;
+    background: rgba(14, 34, 56, 0.98);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 0;
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.4);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 999;
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: calc(100vh - 70px);
+}
+
+.has-dropdown.active .dropdown-mega {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.mega-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    padding: 40px 60px;
+    max-height: none;
+    overflow-y: visible;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Categorías */
+.mega-category {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+}
+
+.mega-category:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.category-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.category-header i {
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.category-header h4 {
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.category-items {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.category-items li {
+    margin: 0;
+}
+
+.category-items li a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.category-items li a i {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.6);
+    transition: color 0.2s ease;
+}
+
+.category-items li a:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    padding-left: 18px;
+}
+
+.category-items li a:hover i {
+    color: #fff;
+}
+
+/* Submenús */
+.has-submenu {
+    position: relative;
+}
+
+.submenu-arrow {
+    margin-left: auto;
+    font-size: 12px;
+    transition: transform 0.3s ease;
+}
+
+.has-submenu.active > a .submenu-arrow {
+    transform: rotate(180deg);
+}
+
+.submenu {
+    position: static;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    max-height: 0;
+    opacity: 0;
+    visibility: hidden;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    padding: 0;
+    list-style: none;
+    margin: 8px 0 0 0;
+}
+
+.has-submenu.active > .submenu {
+    max-height: 600px;
+    opacity: 1;
+    visibility: visible;
+    padding: 8px 0;
+}
+
+.submenu li {
+    margin: 0;
+}
+
+.submenu li a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    padding: 10px 16px 10px 24px;
+    font-size: 13px;
+    transition: all 0.2s ease;
+    border-radius: 0;
+}
+
+.submenu li a:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    padding-left: 28px;
+}
+
+/* Submenú anidado */
+.has-nested-submenu {
+    position: relative;
+}
+
+.nested-submenu {
+    background: rgba(255, 255, 255, 0.05);
+    margin: 4px 0 0 0;
+}
+
+.has-nested-submenu.active > .nested-submenu {
+    max-height: 400px;
+    opacity: 1;
+    visibility: visible;
+    padding: 8px 0;
+}
+
+.nested-submenu li a {
+    padding-left: 40px;
+    font-size: 12px;
+}
+
+.nested-submenu li a:hover {
+    padding-left: 44px;
+}
+
+/* ############################################################################################################################
+
+/* Notification Section */
+.notification-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    cursor: pointer;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    margin-left: auto;
+    margin-right: 10px;
+}
+
+.notification-icon:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.notification-icon i {
+    color: #fff;
+    font-size: 20px;
+}
+
+.notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 10px;
+    min-width: 18px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(255, 107, 107, 0.4);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+.notification-dropdown {
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background: rgba(14, 34, 56, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    width: 380px;
+    max-height: 500px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 9999;
+    overflow: hidden;
+}
+
+.notification-dropdown.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.notification-dropdown::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    right: 15px;
+    width: 12px;
+    height: 12px;
+    background: rgba(14, 34, 56, 0.95);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    transform: rotate(45deg);
+}
+
+.notification-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.notification-header h6 {
+    margin: 0;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.mark-all-read {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 12px;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.mark-all-read:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.notification-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.notification-item {
+    display: flex;
+    gap: 12px;
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.notification-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.notification-item.unread {
+    background: rgba(102, 126, 234, 0.15);
+}
+
+.notification-item.unread:hover {
+    background: rgba(102, 126, 234, 0.25);
+}
+
+/* Efecto de padding solo en dispositivos con cursor */
+@media (hover: hover) and (pointer: fine) {
+    .notification-item {
+        transition: all 0.3s ease;
+    }
+    
+    .notification-item:hover {
+        padding-left: 25px;
+    }
+
+    .notification-item.unread:hover {
+        padding-left: 25px;
+    }
+}
+
+.notification-icon-small {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.notification-icon-small i {
+    color: #fff;
+    font-size: 18px;
+}
+
+.notification-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.notification-title {
+    margin: 0 0 4px 0;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.notification-text {
+    margin: 0 0 6px 0;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 13px;
+    line-height: 1.4;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+
+.notification-time {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 11px;
+}
+
+.notification-separator {
+    padding: 8px 20px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.03);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    letter-spacing: 0.5px;
+}
+
+.notification-empty {
+    padding: 40px 20px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.notification-empty i {
+    font-size: 48px;
+    margin-bottom: 15px;
+    opacity: 0.3;
+}
+
+.notification-empty p {
+    margin: 0;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.5);
+}
+/* ############################################################################################################################
+
+/* User Profile Section */
+.user-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    cursor: pointer;
+    padding: 8px 16px;
+    border-radius: 50px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.user-section:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.user-name {
+    color: #fff;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.profile-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: bold;
+    font-size: 16px;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+/* Dropdown Menu */
+.user-dropdown-menu {
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background: rgba(14, 34, 56, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    min-width: 220px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 9999;
+}
+
+.user-dropdown-menu.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.user-dropdown-menu::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    right: 20px;
+    width: 12px;
+    height: 12px;
+    background: rgba(14, 34, 56, 0.95);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    transform: rotate(45deg);
+}
+
+.user-dropdown-item {
+    padding: 14px 20px;
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.user-dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.user-dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    padding-left: 25px;
+}
+
+.user-dropdown-item:first-child {
+    border-radius: 12px 12px 0 0;
+}
+
+.user-dropdown-item:last-child {
+    border-radius: 0 0 12px 12px;
+}
+
+/* Hamburger Menu */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.hamburger span {
+    width: 25px;
+    height: 3px;
+    background: #fff;
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+.hamburger.active span:nth-child(1) {
+    transform: rotate(45deg) translate(8px, 8px);
+}
+
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(8px, -8px);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    nav {
+        padding: 0 20px;
+    }
+
+    .nav-links {
+        position: fixed;
+        top: -150vh;
+        left: 0;
+        right: 0;
+        width: 100%;
+        height: calc(100vh - 70px);
+        background: rgba(14, 34, 56, 0.98);
+        backdrop-filter: blur(20px);
+        flex-direction: column;
+        justify-content: flex-start;
+        padding: 40px 0;
+        transition: top 0.4s ease;
+        z-index: 999;
+        overflow-y: auto;
+        gap: 0;
+    }
+
+    .nav-links.active {
+        top: 70px;
+    }
+
+    .nav-links > li {
+        width: 100%;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-links > li > a {
+        width: 100%;
+        padding: 18px 30px;
+        border-radius: 0;
+    }
+
+    /* Ocultar el botón Menú en móvil */
+    .has-dropdown > .menu-toggle {
+        display: none !important;
+    }
+    
+    .menu-toggle {
+        display: none !important;
+    }
+
+    /* Mostrar directamente el mega menú en móvil */
+    .dropdown-mega {
+        position: static;
+        transform: none;
+        width: 100%;
+        margin: 0;
+        opacity: 1;
+        visibility: visible;
+        max-height: none;
+        overflow: visible;
+        transition: none;
+        border-radius: 0;
+        box-shadow: none;
+        border: none;
+        background: transparent;
+    }
+
+    .mega-container {
+        grid-template-columns: 1fr;
+        gap: 0;
+        padding: 0;
+        max-height: none;
+    }
+
+    .mega-category {
+        background: transparent;
+        border-radius: 0;
+        padding: 0;
+        border: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        pointer-events: auto;
+    }
+
+    .category-header {
+        padding: 15px 30px;
+        margin-bottom: 0;
+        border-bottom: none;
+        background: rgba(255, 255, 255, 0.03);
+        cursor: pointer;
+    }
+
+    .category-header h4 {
+        font-size: 14px;
+    }
+
+    .category-items {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+    }
+
+    .mega-category.active .category-items {
+        max-height: 2000px;
+    }
+
+    .category-items li a {
+        padding: 12px 30px 12px 50px;
+        border-radius: 0;
+        font-size: 13px;
+    }
+
+    /* Submenús en móvil */
+    .submenu {
+        position: static;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        background: rgba(255, 255, 255, 0.03);
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+        padding: 0;
+    }
+
+    .has-submenu.active > .submenu {
+        max-height: 500px;
+        padding: 8px 0;
+    }
+
+    .submenu li a {
+        padding: 10px 30px 10px 70px;
+        font-size: 12px;
+    }
+
+    .nested-submenu {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .has-nested-submenu.active > .nested-submenu {
+        max-height: 300px;
+        padding: 8px 0;
+    }
+
+    .nested-submenu li a {
+        padding: 10px 30px 10px 90px;
+        font-size: 11px;
+    }
+
+    .submenu-arrow {
+        transition: transform 0.3s ease;
+    }
+
+    .has-submenu.active > a .submenu-arrow,
+    .has-nested-submenu.active > a .submenu-arrow {
+        transform: rotate(90deg);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+        .category-items li a:hover {
+            padding-left: 55px;
+        }
+    }
+
+    .hamburger {
+        display: flex;
+    }
+
+    /* Ocultar título cuando aparece el hamburger */
+    .navbar-title-center {
+        display: none !important;
+    }
+
+    .user-section {
+        margin-left: 0;
+        margin-right: 10px;
+        padding: 6px 12px;
+        gap: 8px;
+    }
+
+    .profile-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+    }
+
+    .user-name {
+        display: none;
+    }
+
+    .user-dropdown-menu {
+        right: 10px;
+    }
+}
+
+/* Título centrado en navbar */
+.navbar-title-center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #fff;
+    white-space: nowrap;
+    text-align: center;
+    z-index: 100;
+}
+
+/* Ocultar cuando el espacio es insuficiente (antes de que se recorte) */
+@media (max-width: 900px) {
+    .navbar-title-center {
+        display: none !important;
+    }
+}
+
+/* ############################################################################################################################
+/* Content Section */
+.content {
+    padding: 40px 20px;
+    min-height: 400px;
+    flex: 1 0 auto;
+}
+
+/* ############################################################################################################################
+/* Footer con efecto Liquid Glass */
+.footer {
+    background: rgba(14, 34, 56, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 -8px 32px 0 rgba(14, 34, 56, 0.37);
+    margin-top: 60px;
+    position: relative;
+}
+
+/* Efecto hover en footer */
+.footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0) 100%);
+    pointer-events: none;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 50px 40px 20px;
+    position: relative;
+}
+
+.footer-top {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+.footer-section h3,
+.footer-section h4 {
+    color: #fff;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.footer-logo .separator {
+    font-size: 28px;
+    color: rgba(255, 255, 255, 0.3);
+    font-weight: 300;
+}
+
+.footer-logo-img {
+    height: 40px;
+    width: auto;
+    filter: brightness(0) invert(1);
+}
+
+.footer-description {
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.6;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+/* Social Links */
+.social-links {
+    display: flex;
+    gap: 12px;
+}
+
+.social-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    text-decoration: none;
+    font-size: 18px;
+    transition: all 0.3s ease;
+}
+
+.social-icon:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Footer Links */
+.footer-links,
+.footer-contact {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-links li,
+.footer-contact li {
+    margin-bottom: 12px;
+}
+
+.footer-links a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.footer-links a:hover {
+    color: #fff;
+    padding-left: 8px;
+}
+
+.footer-contact li {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Footer Bottom */
+.footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 30px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.footer-bottom p {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+}
+
+.footer-bottom-links {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.footer-bottom-links a {
+    color: rgba(255, 255, 255, 0.6);
+    text-decoration: none;
+    font-size: 13px;
+    transition: color 0.3s ease;
+}
+
+.footer-bottom-links a:hover {
+    color: #fff;
+}
+
+.footer-bottom-links span {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+/* Footer Responsive */
+@media (max-width: 768px) {
+    .footer-content {
+        padding: 40px 20px 20px;
+    }
+
+    .footer-top {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+    }
+
+    .footer-bottom-links {
+        justify-content: center;
+    }
+}
+/* ############################################################################################################################
+/* INICIO CSS CARGA DE PAGINA */
+
+#loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh; /* Usar viewport height */
+    background: rgba(255, 255, 255, 0.8);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.loading-spinner {
+    position: absolute; /* Posicionamiento absoluto */
+    top: 50%;         /* Centro vertical */
+    left: 50%;        /* Centro horizontal */
+    transform: translate(-50%, -50%); /* Ajuste preciso del centro */
+    text-align: center;
+}
+
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+    color: #0d6efd; /* Color primario de Bootstrap */
+}
+
+/* Opcional: Añadir texto debajo del spinner */
+.loading-spinner::after {
+    content: 'Cargando...';
+    display: block;
+    margin-top: 0.5rem;
+    color: #0d6efd;
+}
+
+/* FIN CSS CARGA DE PAGINA */
+
+/* ############################################################################################################################
+/* INICIO CSS BOTONES ELIMINAR, EDITAR, DETALLE ETC*/
+.btn-icon-custom {
+    background: none; /* Sin fondo */
+    border: none; /* Sin borde */
+    padding: 0; /* Sin padding extra */
+    display: inline-block; /* Asegura que solo la imagen tenga tamaño */
+    cursor: pointer; /* Hace que el cursor cambie solo sobre la imagen */
+}
+
+.btn-icon-custom img {
+    width: 20px;  
+    height: 20px;  
+    border-radius: 50%; /* Hace la imagen circular */
+    object-fit: cover; /* Evita que la imagen se deforme */
+    display: block; /* Evita espacios extra alrededor */
+}
+
+.input-group {
+    max-width: 800px;
+    margin: 20px auto;
+}
+.form-select {
+    max-width: 200px;
+}
+/* FIN CSS BOTONES ELIMINAR, EDITAR, DETALLE ECT */
+
+/* ############################################################################################################################
+/* INICIO CSS TABLAS */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 1rem 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 0.875rem;
+    background: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+th, td {
+    padding: 1rem;
+    text-align: left;
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s ease;
+    position: relative;
+    max-width: 300px; /* Más razonable para responsive */
+}
+
+th {
+    background-color: #f8fafc;
+    font-weight: 600;
+    color: #1e293b;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+}
+
+td {
+    color: #475569;
+    line-height: 1.5;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Hover effects */
+tbody tr:hover td {
+    background-color: #f1f5f9;
+    cursor: default;
+}
+
+/* Zebra striping */
+tbody tr:nth-child(odd) {
+    background-color: #f8f9fa;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #ffffff;
+}
+
+tbody tr:hover td {
+    background-color: #e9ecef; /* Gris más oscuro al hover */
+    cursor: default;
+}
+
+/* Expanded state */
+td.expanded {
+    white-space: normal;
+    max-height: none;
+    background-color: #f1f5f9;
+    transition: all 0.3s ease;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    table {
+        font-size: 0.8125rem;
+    }
+    
+    th, td {
+        padding: 0.75rem;
+        max-width: 200px;
+    }
+}
+
+/* Optional: Add vertical borders only between columns */
+th:not(:last-child),
+td:not(:last-child) {
+    border-right: 1px solid #e2e8f0;
+}
+
+/* Optional: First/Last cell radius */
+th:first-child {
+    border-top-left-radius: 8px;
+}
+
+th:last-child {
+    border-top-right-radius: 8px;
+}
+
+tr:last-child td:first-child {
+    border-bottom-left-radius: 8px;
+}
+
+tr:last-child td:last-child {
+    border-bottom-right-radius: 8px;
+}
+
+/* Optional: Sticky header */
+thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background-color: #f8fafc;
+}
+/* FIN CSS TABLAS */
+/* ############################################################################################################################
+
+/* INICIO BUSRBUJAS */
+.estado-burbuja {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px; /* Bordes redondeados */
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    text-transform: uppercase; /* Texto en mayúsculas */
+}
+
+.activo {
+    background-color: #d4edda; /* Verde claro */
+    color: #155724; /* Texto verde oscuro */
+    border: 1px solid #c3e6cb; /* Borde verde */
+}
+
+.no-activo {
+    background-color: #f8d7da; /* Rojo claro */
+    color: #721c24; /* Texto rojo oscuro */
+    border: 1px solid #f5c6cb; /* Borde rojo */
+}
+
+.anulado {
+    background-color: #FFE2E2; /* Rosa suave */
+    color: #D32F2F; /* Rojo oscuro para texto */
+    border: 1px solid #FFCDD2; /* Borde rosa claro */
+}
+
+.completado {
+    background-color: #F5F5F5; /* Gris claro */
+    color: #424242;            /* Gris oscuro para texto */
+    border: 1px solid #BDBDBD; /* Borde gris medio */
+}
+
+.abierto {
+    background-color: #E8F5E9; /* Verde menta suave */
+    color: #2E7D32; /* Verde oscuro para texto */
+    border: 1px solid #C8E6C9; /* Borde verde claro */
+}
+
+.en-proceso {
+    background-color: #FFF3E0; /* Naranja suave */
+    color: #F57C00; /* Naranja oscuro para texto */
+    border: 1px solid #FFE0B2; /* Borde naranja claro */
+}
+
+.cupoasignado {
+    background-color: #E8F5E9; /* Verde menta suave */
+    color: #2E7D32; /* Verde oscuro para texto */
+    border: 1px solid #C8E6C9; /* Borde verde claro */
+}
+
+.desistimiento {
+    background-color: #FFE2E2; /* Rosa suave */
+    color: #D32F2F; /* Rojo oscuro para texto */
+    border: 1px solid #FFCDD2; /* Borde rosa claro */
+}
+
+.singestion {
+    background-color: #F5F5F5; /* Gris claro */
+    color: #424242;            /* Gris oscuro para texto */
+    border: 1px solid #BDBDBD; /* Borde gris medio */
+}
+/* FIN CSS BURBUJAS */
+/* ############################################################################################################################
+
+/* CSS DE LAS CARDS DE DENTRO DE LAS APPS */
+.card-modulo-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto; /* Centra horizontalmente */
+}
+
+.card-modulo {
+    background: #eeecec;
+    border: 1px solid #d5d5d5;
+    border-radius: 8px;
+    padding: 20px;
+    width: calc(33.333% - 40px); /* 3 cards por fila en pantallas grandes */
+    text-align: center;
+    transition: all 0.3s ease;
+    display: flex; /* Activa Flexbox */
+    flex-direction: column; /* Organiza los elementos en columna */
+}
+
+.card-modulo:hover {
+    background: #d5d5d5;
+    transform: translateY(-10px);
+}
+
+.card-modulo h2 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+    color: #0e2238; /* Color azul para resaltar */
+    font-weight: bold; /* Texto en negrita */
+    /* text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Sombra suave */
+}
+
+.card-modulo p {
+    font-size: 1em;
+    color: #666;
+    flex-grow: 1; /* Hace que el texto ocupe el espacio disponible */
+}
+
+.card-modulo button {
+    background-color: #0e2238;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.card-modulo button:hover {
+    background-color: #0056b3;
+}
+
+/* Media Queries para hacerlo responsivo */
+@media (max-width: 1024px) {
+    .card-modulo {
+        width: calc(50% - 40px); /* 2 cards por fila en tablets */
+    }
+}
+
+@media (max-width: 768px) {
+    .card-modulo {
+        width: 100%; /* 1 card por fila en móviles */
+    }
+}
+
+.card-modulo button,
+.card-modulo a.btn {
+    background-color: #0e2238;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 15px;
+    text-decoration: none; /* Asegúrate de que los enlaces no tengan subrayado */
+    display: inline-block; /* Asegúrate de que los enlaces se comporten como botones */
+    margin-top: auto; /* Empuja el botón hacia abajo */
+}
+
+/* FIN CSS DE LAS CARDS DE DENTRO DE LAS APPS */
+/* ############################################################################################################################
+
+
+/* INICIO CSS FILTROS */
+.filtrosapiselect {
+    width: 100%; /* igual que el input */
+    text-align: center;
+    border-radius: 5px; 
+    border: 0.5px solid #768397;
+    padding: 6px 8px;
+    background-color: #fff;
+    color: #212529;
+    font-size: 14px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease-in-out;
+    display: inline-block;
+}
+
+
+.filtrosapiselect:focus {
+    border-color: #0b5ed7;
+    box-shadow: 0 0 6px rgba(13, 110, 253, 0.5);
+    outline: none;
+    background-color: #f8f9fa;
+}
+
+.filtrosapi {
+    width: 80%;
+    text-align: center;
+    border-radius: 5px; 
+    border: 0.5px solid #768397; 
+    padding: 6px 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease-in-out;
+    margin: 0 auto; 
+    display: block; 
+}
+
+.filtrosapi:focus {
+    border-color: #0b5ed7;
+    box-shadow: 0 0 6px rgba(13, 110, 253, 0.5);
+    outline: none;
+}
+
+.filtrosapifecha {
+    width: 20%;
+    text-align: center;
+    border-radius: 5px; 
+    border: 0.5px solid #768397; 
+    padding: 6px 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease-in-out;
+    margin: 0 auto; 
+    display: inline-block; 
+}
+
+.filtrosapifecha:focus {
+    border-color: #0b5ed7;
+    box-shadow: 0 0 6px rgba(13, 110, 253, 0.5);
+    outline: none;
+}
+
+.dropdownfiltro {
+    position: fixed !important;
+    z-index: 1050; /* aseguramos que quede encima */
+}
+
+/* FIN CSS FILTROS */
+/* ############################################################################################################################
+
+/* INICIO CSS SELECT2 */
+/* .select2-container {
+    width: 100% !important;
+} */
+
+.select2-container .select2-selection--single {
+    width: 100%; /* Ensure the selection box takes full width */
+    border-width: 1px; /* Make the border invisible by default */
+    border-color:  #ced4da; /* Ensure the border is transparent */
+    border-style: solid; /* Keep the solid style for consistency */
+    box-sizing: border-box; /* Include border in the width calculation */
+    height: 38px; /* Adjust height as needed */
+    line-height: 38px; /* Ensure text is vertically centered */
+    transition: border-color 0.3s ease; /* Smooth transition for border color */
+    border-radius: 7px;
+}
+
+/* Adjust placeholder vertical alignment */
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 38px; /* Match the height of your select field */
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-top: -2px; /* Fine-tune this value to adjust vertical alignment */
+}
+
+/* Center dropdown arrow vertically */
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 38px; /* Match the height of the select field */
+    top: 50%; 
+    transform: translateY(-50%);
+}
+
+/* Change border color on hover */
+.select2-container .select2-selection--single:hover {
+    border-width: 4px; /* Apply border width on hover */
+    border-color: rgba(169, 201, 250, 0.7); /* Light blue border on hover */
+}
+
+/* Change border color on focus */
+.select2-container .select2-selection--single:focus {
+    border-width: 4px; /* Apply border width on focus */
+    border-color: rgba(169, 201, 250, 0.7); /* Slightly darker blue border on focus */
+}
+
+/* Change border color when clicked (during selection) */
+.select2-container--focus .select2-selection--single {
+    border-width: 4px; /* Apply border width on focus */
+    border-color: rgba(169, 201, 250, 0.7); /* Slightly darker blue border on focus */
+}
+
+.select2-container--default .select2-dropdown {
+    border-radius: 7px; /* Rounded corners for the dropdown container */
+    border: 1px solid rgba(131, 130, 130, 0.7); /* Optional: border for the dropdown container */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: add some shadow for better visibility */
+}
+
+/* Style the dropdown items with rounded corners */
+.select2-container--default .select2-results {
+    border-radius: 4px; /* Rounded corners for the dropdown items container */
+    overflow: hidden; /* Ensure rounded corners are not cut off */
+}
+
+/* Apply rounded corners and adjust height for each dropdown option */
+.select2-container--default .select2-results__option {
+    padding: 6px 6px; /* Adjust padding to control height (top-bottom padding) */
+    line-height: 20px; /* Adjust line height to fit the new height */
+    height: 25px; /* Set a specific height if needed (optional) */
+    display: flex; /* Use flexbox to align content properly */
+    align-items: center; /* Center content vertically */
+}
+
+/* Arregla problema select del modal */
+.select2-close-mask{
+    z-index: 2099;
+}
+.select2-dropdown{
+    z-index: 3051;
+}
+
+/* para contenido en el select que tiene mucha informacion */
+select.form-control, select.form-select, .select2-selection__rendered {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    display: block;
+}
+.select2-results__option {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+/* FIN CSS SELECT2 */
+/* ############################################################################################################################
+
+/* Bootstrap Cards inicio */
+
+.card-custom {
+    background: #eeecec  !important;
+    border: 1px solid #d5d5d5 !important;
+    border-top: 3px solid transparent !important;
+    transition: all 0.3s ease !important;
+    border-radius: 1rem !important; /* Bordes redondeados como Bootstrap */
+}
+
+.card-custom:hover {
+    background: #d5d5d5 !important;
+    border-top: 3px solid #0e2238 !important;
+}
+/* ############################################################################################################################
+/* INICIO CSS BOTONES BOOTSTRAP MODERNOS */
+
+/* Botón Primary - Color base principal */
+.btn-primary {
+    background: linear-gradient(135deg, #0e2238 0%, #1a3a5c 100%) !important;
+    border: none !important;
+    color: white !important;
+    padding: 8px 16px !important;
+    border-radius: 8px !important;
+    font-weight: 500 !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 2px 8px rgba(14, 34, 56, 0.3) !important;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #1a3a5c 0%, #0e2238 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(14, 34, 56, 0.4) !important;
+    color: white !important;
+}
+
+.btn-primary:active, .btn-primary:focus {
+    background: linear-gradient(135deg, #0a1a2e 0%, #0e2238 100%) !important;
+    box-shadow: 0 2px 6px rgba(14, 34, 56, 0.5) !important;
+    color: white !important;
+}
+
+/* Botón Success - Verde con estilo similar */
+.btn-success {
+    background: linear-gradient(135deg, #11998e 0%, #16b3a5 100%) !important;
+    border: none !important;
+    color: white !important;
+    padding: 8px 16px !important;
+    border-radius: 8px !important;
+    font-weight: 500 !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 2px 8px rgba(17, 153, 142, 0.3) !important;
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #16b3a5 0%, #11998e 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(17, 153, 142, 0.4) !important;
+    color: white !important;
+}
+
+.btn-success:active, .btn-success:focus {
+    background: linear-gradient(135deg, #0d7a72 0%, #11998e 100%) !important;
+    box-shadow: 0 2px 6px rgba(17, 153, 142, 0.5) !important;
+    color: white !important;
+}
+
+/* Botón Danger - Rojo con estilo similar */
+.btn-danger {
+    background: linear-gradient(135deg, #dc3545 0%, #e74c3c 100%) !important;
+    border: none !important;
+    color: white !important;
+    padding: 8px 16px !important;
+    border-radius: 8px !important;
+    font-weight: 500 !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3) !important;
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, #e74c3c 0%, #dc3545 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4) !important;
+    color: white !important;
+}
+
+.btn-danger:active, .btn-danger:focus {
+    background: linear-gradient(135deg, #c82333 0%, #dc3545 100%) !important;
+    box-shadow: 0 2px 6px rgba(220, 53, 69, 0.5) !important;
+    color: white !important;
+}
+
+/* Botón Warning - Naranja/Amarillo con estilo similar */
+.btn-warning {
+    background: linear-gradient(135deg, #f39c12 0%, #f5b041 100%) !important;
+    border: none !important;
+    color: white !important;
+    padding: 8px 16px !important;
+    border-radius: 8px !important;
+    font-weight: 500 !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 2px 8px rgba(243, 156, 18, 0.3) !important;
+}
+
+.btn-warning:hover {
+    background: linear-gradient(135deg, #f5b041 0%, #f39c12 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(243, 156, 18, 0.4) !important;
+    color: white !important;
+}
+
+.btn-warning:active, .btn-warning:focus {
+    background: linear-gradient(135deg, #d68910 0%, #f39c12 100%) !important;
+    box-shadow: 0 2px 6px rgba(243, 156, 18, 0.5) !important;
+    color: white !important;
+}
+
+/* Botón Info - Azul claro con estilo similar */
+.btn-info {
+    background: linear-gradient(135deg, #17a2b8 0%, #3dbecf 100%) !important;
+    border: none !important;
+    color: white !important;
+    padding: 8px 16px !important;
+    border-radius: 8px !important;
+    font-weight: 500 !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 2px 8px rgba(23, 162, 184, 0.3) !important;
+}
+
+.btn-info:hover {
+    background: linear-gradient(135deg, #3dbecf 0%, #17a2b8 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(23, 162, 184, 0.4) !important;
+    color: white !important;
+}
+
+.btn-info:active, .btn-info:focus {
+    background: linear-gradient(135deg, #138496 0%, #17a2b8 100%) !important;
+    box-shadow: 0 2px 6px rgba(23, 162, 184, 0.5) !important;
+    color: white !important;
+}
+
+/* Botón Secondary - Gris con estilo similar */
+.btn-secondary {
+    background: linear-gradient(135deg, #6c757d 0%, #868e96 100%) !important;
+    border: none !important;
+    color: white !important;
+    padding: 8px 16px !important;
+    border-radius: 8px !important;
+    font-weight: 500 !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 2px 8px rgba(108, 117, 125, 0.3) !important;
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(135deg, #868e96 0%, #6c757d 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(108, 117, 125, 0.4) !important;
+    color: white !important;
+}
+
+.btn-secondary:active, .btn-secondary:focus {
+    background: linear-gradient(135deg, #5a6268 0%, #6c757d 100%) !important;
+    box-shadow: 0 2px 6px rgba(108, 117, 125, 0.5) !important;
+    color: white !important;
+}
+
+/* Botón Light - Claro con borde oscuro */
+.btn-light {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%) !important;
+    border: 1px solid #dee2e6 !important;
+    color: #212529 !important;
+    padding: 8px 16px !important;
+    border-radius: 8px !important;
+    font-weight: 500 !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+.btn-light:hover {
+    background: linear-gradient(135deg, #e2e6ea 0%, #f8f9fa 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    color: #212529 !important;
+    border-color: #adb5bd !important;
+}
+
+.btn-light:active, .btn-light:focus {
+    background: linear-gradient(135deg, #dae0e5 0%, #e2e6ea 100%) !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2) !important;
+    color: #212529 !important;
+}
+
+/* Botón Dark - Oscuro similar al primary */
+.btn-dark {
+    background: linear-gradient(135deg, #343a40 0%, #495057 100%) !important;
+    border: none !important;
+    color: white !important;
+    padding: 8px 16px !important;
+    border-radius: 8px !important;
+    font-weight: 500 !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 2px 8px rgba(52, 58, 64, 0.3) !important;
+}
+
+.btn-dark:hover {
+    background: linear-gradient(135deg, #495057 0%, #343a40 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(52, 58, 64, 0.4) !important;
+    color: white !important;
+}
+
+.btn-dark:active, .btn-dark:focus {
+    background: linear-gradient(135deg, #23272b 0%, #343a40 100%) !important;
+    box-shadow: 0 2px 6px rgba(52, 58, 64, 0.5) !important;
+    color: white !important;
+}
+
+/* Tamaños de botones - mantener consistencia */
+.btn-sm {
+    padding: 6px 12px !important;
+    font-size: 0.875rem !important;
+}
+
+.btn-lg {
+    padding: 10px 20px !important;
+    font-size: 1.125rem !important;
+}
+
+/* FIN CSS BOTONES BOOTSTRAP MODERNOS */
+/* ############################################################################################################################ */

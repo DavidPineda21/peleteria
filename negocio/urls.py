@@ -6,5 +6,6 @@ urlpatterns = [
 # URLS DE INICIO DE LA APLICACION
 # --------------------------------------------------------
     path('',views.index, name='index'),
+    path('inicio',views.inicio, name='inicio'),
 
-          ]
+]

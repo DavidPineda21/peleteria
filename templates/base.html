@@ -1,0 +1,631 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <title>{% block titulo %} {% endblock %}</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+        <meta name="csrf-token" content="{{ csrf_token }}">
+
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+        <!-- Bootstrap Icons -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css">
+
+
+        <!-- CSS personalizado -->
+        <link rel="stylesheet" type="text/css" href="{% static 'base/css/base.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'base/css/mensajes.css' %}">
+
+        <link rel="icon" type="image/jpeg" href="{% static 'img/imgLogoAlcaldia.png' %}">
+
+        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+
+        <!-- SweetAlert2 -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>  
+
+        <!-- Google tag (gtag.js) -->
+        
+
+    </head>
+    <body>
+        <!-- Navbar -->
+        <nav>
+            <div class="logo">
+                <a href="{% url 'index' %}">
+                    <img src="{% static 'login/img/imgLogoPerseo.png' %}" alt="Logo" class="logo-img">
+                </a>
+            </div>
+
+            <ul class="nav-links" id="navLinks">
+                
+                <!-- Menú Principal con Categorías -->
+                <li class="has-dropdown">
+                    <a href="#" class="menu-toggle">
+                        <i class="bi bi-grid-3x3-gap"></i>
+                        <span>Menú</span>
+                        <i class="bi bi-chevron-down arrow"></i>
+                    </a>
+                    <div class="dropdown-mega">
+                        <div class="mega-container">
+                            
+                            <!-- Categoría: Recursos -->
+                            <div class="mega-category">
+                                <div class="category-header">
+                                    <i class="bi bi-laptop"></i>
+                                    <h4>Recursos</h4>
+                                </div>
+                                <ul class="category-items">
+                                        <li class="has-submenu">
+                                            <a href="#rp"><i class="bi bi-pc-display-horizontal"></i> Recursos Propios <i class="bi bi-chevron-down submenu-arrow"></i></a>
+                                            <ul class="submenu">
+                                                    <li><a href="{% url 'inicio' %}"><i class="bi bi-laptop"></i> Equipos</a></li>
+                                                    <li><a href="{% url 'inicio' %}"><i class="bi bi-bell-fill"></i> Novedades</a></li>
+                                                    <li><a href="{% url 'inicio' %}"><i class="bi bi-person-check"></i> Asignacion RP</a></li>
+                                                    <li><a href="{% url 'inicio' %}"><i class="bi bi-file-earmark-person"></i> Acudiente Actas</a></li>
+                                                    <li><a href="{% url 'inicio' %}"><i class="bi bi-building-check"></i> Asignacion Institucion</a></li>
+                                            </ul>
+                                        </li>
+                                    
+                                    <li class="has-submenu">
+                                        <a href="#inventario"><i class="bi bi-box"></i> Inventario <i class="bi bi-chevron-down submenu-arrow"></i></a>
+                                        <ul class="submenu">
+                                            <li class="has-nested-submenu">
+                                                <a href="#estudiantes"><i class="bi bi-bank"></i> Asignaciones IE <i class="bi bi-chevron-down submenu-arrow"></i></a>
+                                                <ul class="submenu nested-submenu">
+                                                    
+                                                        <li><a href="{% url 'inicio' %}"><i class="bi bi-pc-display"></i> Activos TI</a></li>
+                                                    
+                                                    
+                                                        <li><a href="{% url 'inicio' %}"><i class="bi bi-clipboard-check"></i> Asignaciones IE</a></li>
+                                                    
+                                                </ul>
+                                            </li>
+                                            <li class="has-nested-submenu">
+                                                <a href="#estudiantes"><i class="bi bi-building-gear"></i> Sedes Administrativas <i class="bi bi-chevron-down submenu-arrow"></i></a>
+                                                <ul class="submenu nested-submenu">
+                                                    
+                                                        <li><a href="{% url 'inicio' %}"><i class="bi bi-hdd-stack"></i> Activos SED</a></li>
+                                                    
+                                                    
+                                                        <li><a href="{% url 'inicio' %}"><i class="bi bi-person-badge"></i> Funcionarios</a></li>
+                                                    
+                                                    
+                                                        <li><a href="{% url 'inicio' %}"><i class="bi bi-list-check"></i> Inventario SED</a></li>
+                                                    
+                                                </ul>
+                                            </li>
+                                            <li class="has-nested-submenu">
+                                                <a href="#estudiantes"><i class="bi bi-building"></i> Instituciones Educativas <i class="bi bi-chevron-down submenu-arrow"></i></a>
+                                                <ul class="submenu nested-submenu">
+                                                    
+                                                        <li><a href="{% url 'inicio' %}"><i class="bi bi-eye"></i> Visitas IE</a></li>
+                                                    
+                                                    
+                                                        <li><a href="{% url 'inicio' %}"><i class="bi bi-hdd"></i> Activos IE</a></li>
+                                                    
+                                                    
+                                                        <li><a href="{% url 'inicio' %}"><i class="bi bi-clipboard-data"></i> Inventario IE</a></li>
+                                                    
+                                                    
+                                                        <li><a href="{% url 'inicio' %}"><i class="bi bi-arrow-return-left"></i> Reintegro IE</a></li>
+                                                    
+                                                </ul>
+                                            </li>
+                                            
+                                            <li><a href="{% url 'inicio' %}"><i class="bi bi-collection"></i> Activos Generales</a></li>
+                                            
+                                        </ul>
+                                    </li>
+                                    
+                                    
+                                        <li class="has-submenu">
+                                            <a href="#solicitudes"><i class="bi bi-pc-display"></i> Solicitud Equipos <i class="bi bi-chevron-down submenu-arrow"></i></a>
+                                            <ul class="submenu">
+                                                
+                                                    <li><a href="{% url 'inicio' %}"><i class="bi bi-file-earmark-plus"></i> Solicitudes RP</a></li>
+                                                
+                                                
+                                                    <li><a href="{% url 'inicio' %}"><i class="bi bi-inbox"></i> Solicitudes Generales</a></li>
+                                                
+                                            </ul>
+                                        </li>
+                                    
+                                    
+                                        <li class="has-submenu">
+                                            <a href="#licenciamiento"><i class="bi bi-journal-text"></i> Licenciamiento <i class="bi bi-chevron-down submenu-arrow"></i></a>
+                                            <ul class="submenu">
+                                                
+                                                    <li><a href="{% url 'inicio' %}"><i class="bi bi-key"></i> Licencias</a></li>
+                                                
+                                                
+                                                    <li><a href="{% url 'inicio' %}"><i class="bi bi-person-workspace"></i> Funcionarios</a></li>
+                                                
+                                                
+                                                    <li><a href="{% url 'inicio' %}"><i class="bi bi-graph-up"></i> Usabilidad</a></li>
+                                                
+                                                
+                                                    <li><a href="{% url 'inicio' %}"><i class="bi bi-pencil-square"></i> Asignacion AutoCAD</a></li>
+                                                
+                                                
+                                                    <li><a href="{% url 'inicio' %}"><i class="bi bi-palette"></i> Asignacion Adobe</a></li>
+                                                
+                                                
+                                                    <li><a href="{% url 'inicio' %}"><i class="bi bi-pc-display"></i> OnPremise</a></li>
+                                                
+                                            </ul>
+                                        </li>
+                                    
+                                </ul>
+                            </div>
+
+                            <!-- Categoría: Instituciones -->
+                            <div class="mega-category">
+                                <div class="category-header">
+                                    <i class="bi bi-building"></i>
+                                    <h4>Instituciones</h4>
+                                </div>
+                                <ul class="category-items">
+                                    
+                                        <li class="has-submenu">
+                                            <a href="#transversal"><i class="bi bi-building"></i> Transversal IE <i class="bi bi-chevron-down submenu-arrow"></i></a>
+                                            <ul class="submenu">
+                                                
+                                                    <li><a href="{% url 'inicio' %}"><i class="bi bi-person-badge-fill"></i> Rectores</a></li>
+                                                
+                                                
+                                                    <li><a href="{% url 'inicio' %}"><i class="bi bi-diagram-3"></i> Núcleos</a></li>
+                                                
+                                                
+                                                    <li><a href="{% url 'inicio' %}"><i class="bi bi-geo-alt"></i> Comunas</a></li>
+                                                
+                                                
+                                                    <li><a href="{% url 'inicio' %}"><i class="bi bi-people"></i> Matriculas</a></li>
+                                                
+                                                
+                                                    <li><a href="{% url 'inicio' %}"><i class="bi bi-bank2"></i> Instituciones</a></li>
+                                                
+                                                
+                                                    <li><a href="{% url 'inicio' %}"><i class="bi bi-person-lines-fill"></i> Jefes de Nucleo</a></li>
+                                                
+                                                
+                                                    <li><a href="{% url 'inicio' %}"><i class="bi bi-bricks"></i> Infraestructura Educativa</a></li>
+                                                
+                                            </ul>
+                                        </li>
+                                        <ul class="category-items">
+                                            <li><a href="{% url 'inicio' %}" target="_blank"><i class="bi bi-map"></i> Directorio de Instituciones</a></li>
+                                        </ul>
+                                        
+                                            <ul class="category-items">
+                                                <li><a href="{% url 'inicio' %}" target="_blank"><i class="bi bi-robot"></i> Escuela Inteligente</a></li>
+                                            </ul>                                            
+                                        
+                                         
+                                            <li class="has-submenu">
+                                                <a href="#fiduprevisora"><i class="bi bi-people-fill"></i> Fiduprevisora <i class="bi bi-chevron-down submenu-arrow"></i></a>
+                                                <ul class="submenu">
+                                                    
+                                                        <li><a href="{% url 'inicio' %}"><i class="bi bi-cash-stack"></i> Colillas de Pago</a></li>
+                                                    
+                                                                                             
+                                                        <li><a href="{% url 'inicio' %}"><i class="bi bi-clock-history"></i> Historia Laboral</a></li>
+                                                    
+                                                    
+                                                        <li><a href="{% url 'inicio' %}"><i class="bi bi-search"></i> Buscar Docente</a></li>
+                                                    
+                                                </ul>
+                                            </li>
+                                        
+                                        
+                                            <ul class="category-items">
+                                                <li><a href="{% url 'inicio' %}"><i class="bi bi-backpack2"></i> Busca tu Cupo</a></li>
+                                            </ul>                                              
+                                        
+                                    
+                                </ul>
+                            </div>
+
+                           
+                            
+                        </div>
+                    </div>
+                </li>
+                
+            </ul>
+            <!-- Título centrado -->
+            <div class="navbar-title-center">
+                {% block tituloNav %}   {% endblock %}
+            </div>
+            <!-- Icono de Notificaciones -->
+            <div class="notification-icon" id="notificationIcon">
+                <i class="bi bi-bell"></i>
+                {% if unread_count > 0 %}
+                <span class="notification-badge">{{ unread_count }}</span>
+                {% endif %}
+                
+                <!-- Dropdown de notificaciones -->
+                <div class="notification-dropdown" id="notificationDropdown">
+                    <div class="notification-header">
+                        <h6>Notificaciones</h6>
+                        <button class="mark-all-read">Marcar todas como leídas</button>
+                    </div>
+                    <div class="notification-list">
+                        {% if notifications_unread or notifications_read %}
+                            {% if notifications_unread %}
+                                {% for notification in notifications_unread %}
+                                <div class="notification-item unread" data-id="{{ notification.id }}" data-url="{{ notification.data.url|default:'#' }}">
+                                    <div class="notification-icon-small">
+                                        <i class="bi bi-info-circle"></i>
+                                    </div>
+                                    <div class="notification-content">
+                                        <p class="notification-title">{{ notification.verb }}</p>
+                                        <p class="notification-text">{{ notification.description }}</p>
+                                        <span class="notification-time">{{ notification.timestamp|timesince }} atrás</span>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            {% endif %}
+                            {% if notifications_read %}
+                                <div class="notification-separator">Leídas</div>
+                                {% for notification in notifications_read %}
+                                <div class="notification-item" data-id="{{ notification.id }}" data-url="{{ notification.data.url|default:'#' }}">
+                                    <div class="notification-icon-small">
+                                        <i class="bi bi-check-circle"></i>
+                                    </div>
+                                    <div class="notification-content">
+                                        <p class="notification-title">{{ notification.verb }}</p>
+                                        <p class="notification-text">{{ notification.description }}</p>
+                                        <span class="notification-time">{{ notification.timestamp|timesince }} atrás</span>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            {% endif %}
+                        {% else %}
+                            <div class="notification-empty">
+                                <i class="bi bi-bell-slash"></i>
+                                <p>No hay notificaciones</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="user-section" id="userSection">
+                <!-- <span class="user-name">{{ request.session.nombre }}</span>
+                <div class="profile-icon">{{ request.session.iniciales }}</div> -->
+                
+                <!-- Dropdown Menu -->
+                <div class="user-dropdown-menu" id="dropdownMenu">
+                    <a href="{% url 'index' %}" class="user-dropdown-item">
+                        <span>👤</span>
+                        <span>Perfil</span>
+                    </a>
+                    <a href="{% url 'index' %}" class="user-dropdown-item">
+                        <span>🔐</span>
+                        <span>Cambiar Contraseña</span>
+                    </a>
+                    <a href="{% url 'index' %}" class="user-dropdown-item">
+                        <span>🚪</span>
+                        <span>Cerrar Sesión</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+
+        {% include 'mensajes.html' %}
+        <!-- Content Demo -->
+        <div class="content">
+
+                {% block contenido %} 
+                
+                {% endblock %}
+
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <!-- Footer Top -->
+                <div class="footer-top">
+                    <div class="footer-section">
+                        <h3 class="footer-logo">TODO SOBRE MODA
+                            <span class="separator">|</span>
+                            <img src="{% static 'login/img/imgLogoPerseo.png' %}" alt="Logo" class="footer-logo-img">
+                        </h3>
+                        <p class="footer-description">
+                            Distrito Especial de Ciencia, Tecnología e Innovación de Medellín.
+                        </p>
+                    </div>
+
+                    <div class="footer-section">
+                        <h4>Enlaces Rápidos</h4>
+                        <ul class="footer-links">
+                            <li><a href="https://www.medellin.edu.co" target="_blank">Secretaría de Educación de Medellín</a></li>
+                            <li><a href="{% url 'index' %}" target="_blank">Directorio de Instituciones</a></li>
+                            <li><a href="https://www.medellin.edu.co/escueladigital" target="_blank">Escuela Digital</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-section">
+                        <h4>Contacto</h4>
+                        <ul class="footer-contact">
+                            <li>📧 perseo@medellin.edu.co</li>
+                            <li>📍 Medellín, Colombia</li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-section">
+                        <h4>Síguenos</h4>
+                        <div class="social-links">
+                            <a href="https://www.facebook.com/profile.php?id=61557474953471" class="social-icon" target="_blank">📘</a>
+                            <a href="https://www.youtube.com/channel/UC9e2wKMxN6X_gT1fd0FHaww" class="social-icon" target="_blank">📺</a>
+                            <a href="https://www.instagram.com/Educacionmed" class="social-icon" target="_blank">📷</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer Bottom -->
+                <div class="footer-bottom">
+                    <p>&copy; 2026 Laboratorio de Innovacion | Secretaría de Educación de Medellín. Todos los derechos reservados.</p>
+                    <div class="footer-bottom-links">
+                        <a href="#privacidad">Política de Privacidad</a>
+                        <span>•</span>
+                        <a href="#terminos">Términos y Condiciones</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <!-- JavaScript -->
+        <script>
+            // Dropdown Menu Toggle
+            const userSection = document.getElementById('userSection');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+
+            userSection.addEventListener('click', (e) => {
+                e.stopPropagation();
+                dropdownMenu.classList.toggle('active');
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!userSection.contains(e.target)) {
+                    dropdownMenu.classList.remove('active');
+                }
+            });
+
+            // Hamburger Menu Toggle
+            const hamburger = document.getElementById('hamburger');
+            const navLinks = document.getElementById('navLinks');
+
+            hamburger.addEventListener('click', () => {
+                hamburger.classList.toggle('active');
+                navLinks.classList.toggle('active');
+            });
+
+            // Menu dropdown toggle (desktop click, mobile click)
+            const menuToggle = document.querySelector('.menu-toggle');
+            const hasDropdown = document.querySelector('.has-dropdown');
+            
+            if (menuToggle) {
+                menuToggle.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    
+                    // Reiniciar todos los submenús cada vez que se hace click en el menú
+                    document.querySelectorAll('.has-submenu, .has-nested-submenu').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    // Cerrar todas las categorías en móvil
+                    document.querySelectorAll('.mega-category').forEach(cat => {
+                        cat.classList.remove('active');
+                    });
+                    
+                    hasDropdown.classList.toggle('active');
+                    
+                    // Si es móvil, también toggle mobile-active
+                    if (window.innerWidth <= 768) {
+                        hasDropdown.classList.toggle('mobile-active');
+                    }
+                });
+            }
+
+            // Cerrar el menú al hacer click fuera
+            document.addEventListener('click', (e) => {
+                if (hasDropdown && !hasDropdown.contains(e.target)) {
+                    hasDropdown.classList.remove('active');
+                }
+            });
+
+            // Categorías en móvil - acordeón
+            const categoryHeaders = document.querySelectorAll('.category-header');
+            categoryHeaders.forEach(header => {
+                header.addEventListener('click', (e) => {
+                    if (window.innerWidth <= 768) {
+                        const category = header.parentElement;
+                        category.classList.toggle('active');
+                    }
+                });
+            });
+
+            // Submenús - click en desktop y móvil
+            const hasSubmenuItems = document.querySelectorAll('.has-submenu > a, .has-nested-submenu > a');
+            hasSubmenuItems.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const parent = item.parentElement;
+                    
+                    // Cerrar otros submenús del mismo nivel
+                    const siblings = Array.from(parent.parentElement.children);
+                    siblings.forEach(sibling => {
+                        if (sibling !== parent && (sibling.classList.contains('has-submenu') || sibling.classList.contains('has-nested-submenu'))) {
+                            sibling.classList.remove('active');
+                        }
+                    });
+                    
+                    // Toggle del submenú actual
+                    parent.classList.toggle('active');
+                });
+            });
+
+            // Close mobile menu when clicking on final links (not submenu parents)
+            const finalLinks = document.querySelectorAll('.submenu a:not(.has-nested-submenu > a), .nested-submenu a');
+            finalLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth <= 768) {
+                        hamburger.classList.remove('active');
+                        navLinks.classList.remove('active');
+                        hasDropdown.classList.remove('mobile-active');
+                        // Cerrar todas las categorías
+                        document.querySelectorAll('.mega-category').forEach(cat => {
+                            cat.classList.remove('active');
+                        });
+                    }
+                    // En desktop también cerrar el menú
+                    hasDropdown.classList.remove('active');
+                });
+            });
+
+            // Close mobile menu when clicking on other nav links
+            const otherNavLinks = document.querySelectorAll('.nav-links > li > a:not(.menu-toggle)');
+            otherNavLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    hamburger.classList.remove('active');
+                    navLinks.classList.remove('active');
+                });
+            });
+
+            // Notification dropdown toggle
+            const notificationIcon = document.getElementById('notificationIcon');
+            const notificationDropdown = document.getElementById('notificationDropdown');
+
+            if (notificationIcon) {
+                notificationIcon.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    notificationDropdown.classList.toggle('active');
+                    // Cerrar el dropdown de usuario si está abierto
+                    dropdownMenu.classList.remove('active');
+                });
+            }
+
+            // Close notification dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (notificationIcon && !notificationIcon.contains(e.target)) {
+                    notificationDropdown.classList.remove('active');
+                }
+            });
+
+            // Navbar scroll effect
+            let lastScroll = 0;
+            window.addEventListener('scroll', () => {
+                const nav = document.querySelector('nav');
+                const currentScroll = window.pageYOffset;
+
+                if (currentScroll > 50) {
+                    nav.style.background = 'rgba(14, 34, 56, 0.98)';
+                    nav.style.boxShadow = '0 8px 32px 0 rgba(14, 34, 56, 0.5)';
+                } else {
+                    nav.style.background = 'rgba(14, 34, 56, 0.95)';
+                    nav.style.boxShadow = '0 8px 32px 0 rgba(14, 34, 56, 0.37)';
+                }
+
+                lastScroll = currentScroll;
+            });
+        </script>
+
+        <!-- scripts notificacion-->
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const notificationItems = document.querySelectorAll('.notification-item');
+                const markAllReadButton = document.querySelector('.mark-all-read');
+
+                // Función para marcar notificación individual como leída
+                function markAsRead(notificationId, element) {
+                    fetch("{% url 'mark_notification_as_read' %}", {
+                        method: "POST",
+                        headers: {
+                            "X-CSRFToken": "{{ csrf_token }}",
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ id: notificationId })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            element.classList.remove('unread');
+                        }
+                    })
+                    .catch(error => console.error("Error marcando como leída:", error));
+                }
+
+                // Manejar clic en notificaciones individuales
+                notificationItems.forEach(item => {
+                    item.addEventListener('click', function(e) {
+                        const url = this.getAttribute('data-url');
+                        const notificationId = this.dataset.id;
+
+                        if (notificationId) {
+                            markAsRead(notificationId, this);
+                        }
+
+                        if (url && url !== '#') {
+                            window.location.href = url;
+                        }
+                    });
+                });
+
+                // Manejar "Marcar todas como leídas"
+                if (markAllReadButton) {
+                    markAllReadButton.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        fetch("{% url 'mark_notifications_as_read' %}", {
+                            method: "POST",
+                            headers: {
+                                "X-CSRFToken": "{{ csrf_token }}",
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                user_id: "{{ request.user.id }}"
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                document.querySelectorAll('.notification-item.unread').forEach(item => {
+                                    item.classList.remove('unread');
+                                });
+                                const badge = document.querySelector('.notification-badge');
+                                if (badge) badge.remove();
+                                location.reload(); // Esto puede ser opcional si actualizas dinámicamente
+                            }
+                        })
+                        .catch(error => console.error("Error al marcar todas como leídas:", error));
+                    });
+                }
+            });
+        </script>
+
+        <!-- Bootstrap JavaScript Libraries -->
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+
+        <!-- JS personalizado -->
+        <script src="{% static 'base/js/mensajes.js' %}"></script>
+        <script src="{% static 'base/js/loader.js' %}"></script>
+        <script src="{% static 'base/js/varios.js' %}"></script>
+    </body>
+</html>

@@ -1,0 +1,40 @@
+{% if messages %}
+    <div class="django-messages-container" id="django-messages">
+        {% for message in messages %}
+            <div class="django-message django-message-{{ message.tags }}" 
+                data-message-id="{{ forloop.counter }}"
+                data-auto-dismiss="{% if message.tags == 'error' %}false{% else %}true{% endif %}">
+                
+                <!-- Icono según el tipo de mensaje -->
+                <div class="message-icon">
+                    {% if message.tags == 'success' %}
+                        ✅
+                    {% elif message.tags == 'error' %}
+                        ❌
+                    {% elif message.tags == 'warning' %}
+                        ⚠️
+                    {% elif message.tags == 'info' %}
+                        ℹ️
+                    {% else %}
+                        💬
+                    {% endif %}
+                </div>
+                
+                <!-- Contenido del mensaje -->
+                <div class="message-content">
+                    <div class="message-text">{{ message|safe }}</div>
+                </div>
+                
+                <!-- Botón de cerrar -->
+                <button class="message-close" onclick="dismissMessage({{ forloop.counter }})">
+                    ×
+                </button>
+                
+                <!-- Barra de progreso para auto-dismiss -->
+                {% if message.tags != 'error' %}
+                    <div class="message-progress"></div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
