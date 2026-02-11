@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+        
+        <title>TODO SOBRE MODA - Login</title>
+        {%load static%}
+
+        <!-- CSS personalizado -->
+        <link rel="stylesheet" type="text/css" href="{% static 'login/css/login.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'base/css/mensajes.css' %}">
+        <link rel="icon" type="image/png" href="{% static 'img/imgLogoAlcaldiaColor.png' %}">
+    </head>
+    <body>
+        {% include 'mensajes.html' %}
+        <div class="login-container">
+            <div class="unified-container">
+                <!-- Línea divisoria -->
+                <div class="divider"></div>
+
+                <!-- Panel izquierdo con logo de Perseo -->
+                <div class="left-panel">
+                    <div class="logo-container">
+                        <img src="{% static 'login/img/imgLogoPerseo.png' %}" alt="Perseo Logo" class="perseo-logo">
+                        <div class="perseo-title">
+                            <span class="perseo-text">TODO SOBRE MODA</span>
+                            <div class="perseo-subtitle">
+                                <span>Peleteria</span>
+                                <span>Ciudad de Medellín</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Panel derecho con formulario de login -->
+                <div class="right-panel">
+                    <div class="login-form-container">
+                        <!-- Título PERSEO para móviles (arriba) -->
+                        <div class="mobile-perseo-title">TODO SOBRE MODA</div>
+
+                        <!-- Logo superior -->
+                        <div class="header-logo">
+                            <div class="mobile-perseo-logo">
+                                <img src="{% static 'login/img/imgLogoPerseo.png' %}" alt="Perseo Logo" class="perseo-mobile-img">
+                                <span class="separator">|</span>
+                                <img src="{% static 'login/img/imgLogoAlcaldiaBlanco.png' %}" alt="Alcaldía de Medellín" class="alcaldia-logo mobile-alcaldia">
+                            </div>
+                            <img src="{% static 'login/img/imgLogoAlcaldiaBlanco.png' %}" alt="Alcaldía de Medellín" class="alcaldia-logo desktop-alcaldia">
+                        </div>
+
+                        <!-- Formulario -->
+                        <form id="login-form" method="post">
+                            {% csrf_token %}
+                            <div class="input-group">
+                                <input type="text" id="idusuario" name="idusuario" placeholder="Usuario" required>
+                            </div>
+                            
+                            <div class="input-group">
+                                <div class="password-container">
+                                    <input type="password" id="contrasena" name="contrasena" placeholder="Contraseña" required>
+                                    <button type="button" class="toggle-password" onclick="togglePassword()">👁</button>
+                                </div>
+                            </div>
+                            <!-- Captcha si está habilitado -->
+                            {% if form and form.captcha %}
+                                <div class="input-group captcha-group">
+                                    <div class="captcha-container">
+                                        <div class="captcha-image">
+                                            {{ form.captcha }}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            <button type="submit" class="login-btn">Entrar</button>
+                            
+                            <a href="{% url 'inicio' %}" class="forgot-password">¿Olvidó su contraseña?</a>
+                        </form>
+
+                        <!-- Subtítulo para móviles (abajo) -->
+                        <div class="mobile-perseo-subtitle">
+                            <span>Peleteria</span>
+                            <span>Ciudad de Medellín</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- JS personalizado -->
+        <script src="{% static 'base/js/mensajes.js' %}"></script>
+        <script src="{% static 'login/js/login.js' %}"></script>
+    </body>
+</html>

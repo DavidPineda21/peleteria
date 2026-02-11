@@ -40,9 +40,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'negocio',
-    'notifications',
+    # 'corsheaders',
+    'captcha',
     'appBase',
+    'notifications',
+    'appTSM',
+    
 ]
 
 MIDDLEWARE = [
@@ -53,7 +56,14 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'appBase.middleware.ForcePasswordChangeMiddleware',
+    # 'corsheaders.middleware.CorsMiddleware', #CORS
 ]
+
+# CORS_ALLOWED_ORIGINS = [
+#     "https://perseo.medellin.edu.co",
+#     # Agrega aquí solo los dominios confiables
+# ]
 
 ROOT_URLCONF = 'peleteria.urls'
 
@@ -67,6 +77,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'appBase.context_processors.notifications',
             ],
         },
     },
@@ -88,6 +99,9 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
+# Establecer el router con el cual se define que conexion se utiliza segun el modulo desde donde se opere
+DATABASE_ROUTERS = ['utils.routers.MiRouter',]
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -113,7 +127,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Bogota'
 
 USE_I18N = True
 
@@ -129,7 +143,29 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+AUTHENTICATION_BACKENDS = [
+    'appBase.login.CustomAuthBackend',  # Replace with the actual path to your backend
+    'django.contrib.auth.backends.ModelBackend',  # Keep this for default authentication
+]
+
+
+# Definir la URL a la que apunta el login dentro de todo el aplicativo
+LOGIN_URL = '/login'
+
+# Set the session expiration time (in seconds)
+SESSION_COOKIE_AGE = 3600  # 60 minutes
+
+# Expire session when the user closes the browser
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+# Guardar la sesión en cada solicitud
+SESSION_SAVE_EVERY_REQUEST = True

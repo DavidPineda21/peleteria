@@ -21,7 +21,7 @@ nav {
     left: 0;
     right: 0;
     height: 70px;
-    background: rgba(14, 56, 35, 0.95);
+    background: rgba(14, 34, 56, 0.95);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
