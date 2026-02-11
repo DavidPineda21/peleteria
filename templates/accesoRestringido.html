@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PERSEO - Acceso Restringido</title>
+    {%load static%}
+
+    <!-- CSS personalizado -->
+    <link rel="stylesheet" type="text/css" href="{% static 'base/css/accesoRestringido.css' %}"> 
+
+</head>
+<body>
+    <div class="error-container">
+        <div class="error-card">
+            <!-- Header Section -->
+            <div class="header-section">
+                <img src="{% static 'login/img/imgLogoPerseo.png' %}" alt="PERSEO Logo" class="perseo-logo-error">
+                <h1 class="error-title">P E R S E O</h1>
+                <div class="error-subtitle">
+                    <span>Laboratorio de Innovación</span>
+                    <span>Secretaría de Educación Medellín</span>
+                </div>
+            </div>
+
+            <!-- Message Section -->
+            <div class="message-section">
+                <h2 class="error-message">Acceso restringido</h2>
+                <p class="error-description">
+                    No cuentas con los permisos necesarios para acceder a esta sección.
+                    <br>Por favor, contacta con el administrador del sistema.
+                </p>
+            </div>
+
+            <!-- Countdown Section -->
+            <div class="countdown-section">
+                <div class="countdown-container">
+                    <span class="countdown-text">Redirigiendo en</span>
+                    <div class="countdown-circle">
+                        <span id="countdown">10</span>
+                    </div>
+                    <span class="countdown-text">segundos</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress"></div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="actions-section">
+                <button onclick="redirectNow()" class="redirect-btn">
+                    Ir ahora
+                </button>
+                <button onclick="cancelRedirect()" class="cancel-btn">
+                    Cancelar
+                </button>
+            </div>
+
+            <!-- Footer Logo -->
+            <div class="footer-logo">
+                <img src="{% static 'login/img/imgLogoAlcaldiaBlanco.png' %}" alt="Alcaldía de Medellín" class="alcaldia-logo-error">
+            </div>
+        </div>
+    </div>
+
+        <!-- JS personalizado -->
+        <script>
+            // Define la URL en una variable global
+            window.URL_INICIO = "{% url 'inicio' %}";
+        </script>
+        <script src="{% static 'base/js/accesoRestringido.js' %}"></script>
+</body>
+</html>

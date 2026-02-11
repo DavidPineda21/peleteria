@@ -156,3 +156,6 @@ def mark_notification_as_read(request):
         return JsonResponse({'success': False}, status=404)
 
 
+# Vista cuando el usurio no ha inicia sesion o se le ha cerrado por inactividad
+def accesoRestringido(request):
+    return render(request, 'accesoRestringido.html')  

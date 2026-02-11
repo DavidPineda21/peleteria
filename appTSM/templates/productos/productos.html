@@ -1,0 +1,314 @@
+{% extends 'base.html' %}
+{% block titulo %}Productos{% endblock %}
+{% load static %}
+{% block tituloNav %}Productos{% endblock %}
+{% block contenido %}
+
+
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+            <a class="btn btn-primary btn-sm" title="Inicio" href="{% url 'inicio' %}" role="button">
+                <i class="bi bi-house-door-fill"></i>&nbsp;Inicio
+            </a>
+            {% if perms.appTSM.add_clsproductos %}
+                <a name="" id="" class="btn btn-success btn-sm" title="Agregar" href="{% url 'inicio' %}" role="button">
+                    <i class="bi bi-file-earmark-plus-fill"></i>&nbsp;Agregar Inventario
+                </a>
+            {% endif %}
+            {% if perms.appTSM.view_clsproductos %}
+            <a href="{% url 'inicio' %}" class="btn btn-success btn-sm" title="Exportar">Exportar a CSV</a>
+            {% endif %}
+            <button class="btn btn-danger btn-sm" id="btn-limpiar" title="Reiniciar filtro">Reiniciar filtro</button>
+            <span class="float-end">
+                Resultados: <strong id="total-resultados"></strong>
+            </span>
+        </li>
+    </ul>
+
+
+
+            <div class="table-responsive">
+            <table id="tabla-productos" class="table">
+                <thead>
+                    <tr>
+                        <th class="text-center align-middle">ACCIONES</th>
+                        <th class="text-center align-middle">ID PRODUCTO</th>
+                        <th class="text-center align-middle">TIPO</th>
+                        <th class="text-center align-middle">NOMBRE</th>
+                        <th class="text-center align-middle">COLOR</th>
+                        <th class="text-center align-middle">DESCRIPCION</th>
+                        <th class="text-center align-middle">PRECIO</th>
+                        <th class="text-center align-middle">PRECIO X METRO</th>
+                        <th class="text-center align-middle">STOCK</th>
+
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th class="text-center align-middle">
+                            <div class="dropdown" data-bs-display="static">
+                                <button class="filtrosapiselect dropdown-toggle" type="button" id="filtro-tipoproducto" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Selecciona tipo Producto
+                                </button>
+                                <ul class="dropdown-menu dropdownfiltro" aria-labelledby="dropdowntipoproducto" style="max-height: 200px; overflow-y: auto;">
+                                    {% for tipoproducto in tipoproductos %}
+                                        <li>
+                                            <label class="dropdown-item">
+                                                <input type="checkbox" class="form-check-input me-2 filtro-tipoproducto" value="{{ tipoproducto }}"> {{ tipoproducto }}
+                                            </label>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </th>
+                        <th></th>
+                        <th class="text-center align-middle">
+                            <div class="dropdown" data-bs-display="static">
+                                <button class="filtrosapiselect dropdown-toggle" type="button" id="filtro-color" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Selecciona color
+                                </button>
+                                <ul class="dropdown-menu dropdownfiltro" aria-labelledby="dropdowncolor" style="max-height: 200px; overflow-y: auto;">
+                                    {% for color in colores %}
+                                        <li>
+                                            <label class="dropdown-item">
+                                                <input type="checkbox" class="form-check-input me-2 filtro-color" value="{{ color }}"> {{ color }}
+                                            </label>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </th>
+                        <th></th>
+                        <th></th>
+                        <th class="text-center align-middle">
+                            <div class="dropdown" data-bs-display="static">
+                                <button class="filtrosapiselect dropdown-toggle" type="button" id="filtro-precioxm" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Selecciona precio por metro
+                                </button>
+                                <ul class="dropdown-menu dropdownfiltro" aria-labelledby="dropdownprecioxm" style="max-height: 200px; overflow-y: auto;">
+                                    {% for precioxm in precioxms %}
+                                        <li>
+                                            <label class="dropdown-item">
+                                                <input type="checkbox" class="form-check-input me-2 filtro-precioxm" value="{{ precioxm }}"> {{ precioxm }}
+                                            </label>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </th>
+                        <th></th>
+                    </tr>           
+                </thead>
+                <tbody>
+                    <!-- Aquí se cargan los datos -->
+                </tbody>
+            </table>
+        </div>
+        <div id="paginador"></div>
+
+    <script>
+        const puedeEditar = {{ perms.appTSM.change_clsproductos|yesno:"true,false" }};
+        const puedeEliminar = {{ perms.appTSM.delete_clsproductos|yesno:"true,false" }};
+        let pagina = 1;
+        const tabla = document.querySelector("#tabla-productos tbody");
+        const paginadorDiv = document.getElementById("paginador");
+
+        function cargarProducto(p = pagina) {
+            
+            // Filtros por columna
+            const filtros = {
+                tipoproducto: Array.from(document.querySelectorAll('.filtro-tipoproducto:checked')).map(cb => cb.value),
+                color: Array.from(document.querySelectorAll('.filtro-color:checked')).map(cb => cb.value),
+                precioxm: Array.from(document.querySelectorAll('.filtro-precioxm:checked')).map(cb => cb.value),
+            };
+
+            // Construye la query string
+            let params = `?page=${p}`;
+            for (const key in filtros) {
+                if (Array.isArray(filtros[key]) && filtros[key].length > 0) {
+                    filtros[key].forEach(val => {
+                        params += `&${key}=${encodeURIComponent(val)}`;
+                    });
+                } else if (filtros[key]) {
+                    params += `&${key}=${encodeURIComponent(filtros[key])}`;
+                }
+            }
+            // Realiza la petición al servidor
+            fetch(`/productos/api/${params}`)
+                .then(res => res.json())
+                .then(data => {
+                    tabla.innerHTML = "";
+                    document.getElementById("total-resultados").textContent = data.total;
+                    data.datos.forEach(productos => {
+                    const fila = document.createElement("tr");
+                    let botones = '';
+                        if (puedeEditar) {
+                            botones += `
+                                <a class="btn btn-icon-custom" title="Editar" href="/inventario/activo/pendiente/editar/${productos.idproducto}" role="button">
+                                    <img src="{% static 'img/imgIconEdit.png' %}" alt="Editar" class="icono-btn">
+                                </a>
+                            `;
+                        }
+                        if (puedeEliminar) {
+                            botones += `
+                                <button type="button" class="btn btn-icon-custom" data-bs-toggle="modal" title="Eliminar" data-bs-target="#modalEliminar${productos.idproducto}">
+                                    <img src="{% static 'img/imgIconDelete.png' %}" alt="Eliminar" class="icono-btn">
+                                </button>
+                            `;
+                        }
+
+                        fila.innerHTML = `
+                            <td class="text-center align-middle">
+                                <div class="btn-group">
+                                    ${botones}
+                                </div>
+                            </td>
+                            <td>${productos.idproducto}</td>
+                            <td>${productos.tipoproducto}</td>
+                            <td>${productos.nombre}</td>
+                            <td>${productos.color}</td>
+                            <td>${productos.descripcion}</td>
+                            <td>${productos.precio}</td>
+                            <td>${productos.precioxm}</td>
+                            <td>${productos.stock}</td>
+                        `;
+                        tabla.appendChild(fila);
+
+                        // Crear modal dinámicamente
+                        const modal = document.createElement('div');
+                        modal.className = 'modal fade';
+                        modal.id = `modalEliminar${productos.idproducto}`;
+                        modal.setAttribute('tabindex', '-1');
+                        modal.setAttribute('aria-hidden', 'true');
+                        modal.innerHTML = `
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Eliminar</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        ¿Está seguro de eliminar el producto: ${productos.idproducto} - ${productos.nombre}?
+                                    </div>
+                                    <div class="modal-footer">  
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>                                        
+                                        <form method="post" action="/inventario/activo/pendiente/eliminar/${productos.idproducto}" style="display:inline;">    
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        document.body.appendChild(modal);
+                    });
+
+                // Llamar a la función de expansión después de cargar los datos
+                document.querySelectorAll('#tabla-productos td:not(.text-center):not(.no-expand)').forEach(cell => {
+                    if (cell.scrollWidth > cell.clientWidth) {
+                        cell.title = "Click para expandir/contraer";
+                        cell.style.cursor = "pointer";
+                        cell.addEventListener('click', () => {
+                            cell.classList.toggle('expanded');
+                            if (cell.classList.contains('expanded')) {
+                                cell.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                            }
+                        });
+                    }
+                });
+
+                    // Paginador
+                    paginadorDiv.innerHTML = `
+                            <div aria-label="Page navigation">
+                                <ul class="pagination justify-content-center flex-wrap">
+                                    <li class="page-item ${data.current_page === 1 ? 'disabled' : ''}">
+                                        <a class="page-link" href="#" aria-label="Primera">
+                                            <span aria-hidden="true">&laquo; Primera</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item ${data.current_page === 1 ? 'disabled' : ''}">
+                                        <a class="page-link" href="#" aria-label="Anterior">
+                                            <span aria-hidden="true">Anterior</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item disabled">
+                                        <span class="page-link">Página ${data.current_page} de ${data.num_pages}</span>
+                                    </li>
+                                    <li class="page-item ${data.current_page === data.num_pages ? 'disabled' : ''}">
+                                        <a class="page-link" href="#" aria-label="Siguiente">
+                                            <span aria-hidden="true">Siguiente</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item ${data.current_page === data.num_pages ? 'disabled' : ''}">
+                                        <a class="page-link" href="#" aria-label="Última">
+                                            <span aria-hidden="true">Última &raquo;</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                    `;
+
+                // Agregar después del template string del paginador
+                const btnPrimera = paginadorDiv.querySelector('[aria-label="Primera"]');
+                const btnAnterior = paginadorDiv.querySelector('[aria-label="Anterior"]');
+                const btnSiguiente = paginadorDiv.querySelector('[aria-label="Siguiente"]');
+                const btnUltima = paginadorDiv.querySelector('[aria-label="Última"]');
+
+                if (data.current_page > 1) {
+                    btnPrimera.addEventListener('click', () => cargarProducto(1));
+                    btnAnterior.addEventListener('click', () => cargarProducto(data.current_page - 1));
+                }
+
+                if (data.current_page < data.num_pages) {
+                    btnSiguiente.addEventListener('click', () => cargarProducto(data.current_page + 1));
+                    btnUltima.addEventListener('click', () => cargarProducto(data.num_pages));
+                }
+                })
+                .catch(err => {
+                    console.error("Error cargando datos:", err);
+                });
+        }
+
+        function debounce(fn, delay) {
+        let timeout;
+        return function(...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => fn.apply(this, args), delay);
+        };
+        }
+
+        // Limpiar búsqueda general y filtros
+        document.getElementById("btn-limpiar").addEventListener("click", () => {
+            // Limpiar inputs de texto
+            ["filtro-tipoproducto","filtro-color","filtro-precioxm"].forEach(id => {
+                document.getElementById(id).value = "";
+            });
+            // Limpiar checkboxes
+            document.querySelectorAll('.filtro-tipoproducto, .filtro-color, .filtro-precioxm').forEach(cb => cb.checked = false);
+            pagina = 1;
+            cargarProducto(1);
+        });
+
+        // Filtros solo para inputs de texto
+        ["filtro-tipoproducto","filtro-color","filtro-precioxm"].forEach(id => {
+            document.getElementById(id).addEventListener("input", debounce(() => {
+                pagina = 1;
+                cargarProducto(1);
+            }, 1000));
+        });
+
+        // Escuchar cambios en los checkboxes
+        document.querySelectorAll('.filtro-tipoproducto, .filtro-color, .filtro-precioxm').forEach(cb => {
+            cb.addEventListener('change', () => {
+                pagina = 1;
+                cargarProducto(1);
+            });
+        });
+
+        // Cargar la primera página al iniciar
+        window.addEventListener('DOMContentLoaded', () => {
+            cargarProducto(1);
+        });
+    </script>        
+
+{% endblock %}

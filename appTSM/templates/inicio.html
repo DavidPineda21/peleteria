@@ -4,12 +4,37 @@
 
 {% include 'loader.html' %}
 
+<div class="container">
+    <div class="row g-4 justify-content-center">
+
+        <!-- Productos -->
+        
+        <div class="col-md-6 col-lg-4">
+            <div class="card-custom h-100 border-0 shadow-sm position-relative"
+                onmouseover="this.style.transform='translateY(-5px) scale(1.02)'; this.classList.add('shadow-lg');"
+                onmouseout="this.style.transform='translateY(0) scale(1)'; this.classList.remove('shadow-lg');">
+                <div class="card-body p-4 d-flex align-items-center gap-3">
+                    <!-- Icono a la izquierda -->
+                    <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
+                        style="width: 60px; height: 60px; background:  #0e2238 100%;">
+                        <i class="bi bi-pc-display-horizontal text-white fs-4"></i>
+                    </div>
+                    <!-- Contenido a la derecha -->
+                    <div class="flex-grow-1">
+                        <h5 class="card-title mb-2 fw-bold">Productos</h5>
+                        <p class="card-text text-muted mb-2">Aqui visualizamos los productos en inventario.</p>
+                        <a href="{% url 'productos' %}" class="stretched-link" style="z-index:2;"></a>
+                        <span class="fw-semibold">Ingresar</span>
+                        <i class="bi bi-arrow-right ms-2"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
-    <!-- Cards principales para elegir grupo -->
-<div class="card-modulo-container">
-    <p>AQUI VAN LOS CONTENIDOS, HERMOSA, si viste la notificacion flotante abajito? tambien dale al menu arriba a la derecha, mira como funciona de bien</p>
-</div>    
+       
+    </div>
+</div>
 
 
 {% endblock %}

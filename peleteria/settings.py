@@ -90,18 +90,26 @@ WSGI_APPLICATION = 'peleteria.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': 'postgres',
+    #     'USER': 'postgres',
+    #     'PASSWORD': 'nacional2*',
+    #     'HOST': 'localhost',
+    #     'PORT': '5432',
+    # },
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'bd_peleteria',
-        'USER': 'postgres',
+        'USER':  'postgres',
         'PASSWORD': 'nacional2*',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
+        'HOST':  'localhost',
+        'PORT':  '5432',
+    },
 }
 
 # Establecer el router con el cual se define que conexion se utiliza segun el modulo desde donde se opere
-DATABASE_ROUTERS = ['utils.routers.MiRouter',]
+# DATABASE_ROUTERS = ['utils.routers.MiRouter',]
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
