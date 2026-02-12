@@ -56,7 +56,6 @@ nav::before {
 .logo-img {
     height: 45px;
     width: auto;
-    filter: brightness(0) invert(1);
     transition: all 0.3s ease;
 }
 
@@ -1001,7 +1000,6 @@ nav::before {
 .footer-logo-img {
     height: 40px;
     width: auto;
-    filter: brightness(0) invert(1);
 }
 
 .footer-description {

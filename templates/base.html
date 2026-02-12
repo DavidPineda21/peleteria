@@ -19,6 +19,7 @@
         <!-- CSS personalizado -->
         <link rel="stylesheet" type="text/css" href="{% static 'base/css/base.css' %}">
         <link rel="stylesheet" type="text/css" href="{% static 'base/css/mensajes.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'gridpublico/css/grid.css' %}">
 
         <link rel="icon" type="image/jpeg" href="{% static 'img/imgLogoAlcaldia.png' %}">
 
@@ -40,7 +41,7 @@
         <nav>
             <div class="logo">
                 <a href="{% url 'index' %}">
-                    <img src="{% static 'login/img/imgLogoPerseo.png' %}" alt="Logo" class="logo-img">
+                    <img src="{% static 'login/img/images.png' %}" alt="Logo" class="logo-img">
                 </a>
             </div>
 
@@ -344,26 +345,26 @@
                     <div class="footer-section">
                         <h3 class="footer-logo">TODO SOBRE MODA
                             <span class="separator">|</span>
-                            <img src="{% static 'login/img/imgLogoPerseo.png' %}" alt="Logo" class="footer-logo-img">
+                            <img src="{% static 'login/img/logo.png' %}" alt="Logo" class="footer-logo-img">
                         </h3>
                         <p class="footer-description">
-                            Distrito Especial de Ciencia, Tecnología e Innovación de Medellín.
+                            Aqui encuentras todo lo necesaio para la elaboracion de tus productos.
                         </p>
                     </div>
 
                     <div class="footer-section">
                         <h4>Enlaces Rápidos</h4>
                         <ul class="footer-links">
-                            <li><a href="https://www.medellin.edu.co" target="_blank">Secretaría de Educación de Medellín</a></li>
-                            <li><a href="{% url 'index' %}" target="_blank">Directorio de Instituciones</a></li>
-                            <li><a href="https://www.medellin.edu.co/escueladigital" target="_blank">Escuela Digital</a></li>
+                            <li><a href="#" target="_blank">Inicio</a></li>
+                            <li><a href="{% url 'productosPublico' %}" target="_blank">Catálogo</a></li>
+                            <li><a href="#" target="_blank">Pedidos</a></li>
                         </ul>
                     </div>
 
                     <div class="footer-section">
                         <h4>Contacto</h4>
                         <ul class="footer-contact">
-                            <li>📧 perseo@medellin.edu.co</li>
+                            <li>📧 todosobremoda@gmail.com</li>
                             <li>📍 Medellín, Colombia</li>
                         </ul>
                     </div>
@@ -380,7 +381,7 @@
 
                 <!-- Footer Bottom -->
                 <div class="footer-bottom">
-                    <p>&copy; 2026 Laboratorio de Innovacion | Secretaría de Educación de Medellín. Todos los derechos reservados.</p>
+                    <p>&copy; 2026 Peleteria Todo Sobre Moda | Ubicada en la ciudad de Medellín. Todos los derechos reservados.</p>
                     <div class="footer-bottom-links">
                         <a href="#privacidad">Política de Privacidad</a>
                         <span>•</span>

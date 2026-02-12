@@ -1,0 +1,35 @@
+{% load static %}
+<form enctype="multipart/form-data" method="post">
+    {% csrf_token %}
+    <div class="container-fluid">
+        <div class="row">
+            {% for field in form.visible_fields %}
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+                    <label class="form-label">{{ field.label }}</label>
+
+                    {% if field.name == "imagenes" %}
+                        <!-- Campo especial para múltiples imágenes -->
+                        <input type="file"
+                               name="imagenes"
+                               class="form-control"
+                               multiple
+                               accept=".jpg,.jpeg,.png,.webp">
+                    {% else %}
+                        {{ field }}
+                    {% endif %}
+
+                    {% if field.errors %}
+                        <div class="text-danger">{{ field.errors }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <!-- Forzar salto de fila -->
+            <div class="w-100"></div>
+            <!-- Botones en la primera columna de la última fila -->
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+                <input class="btn btn-success" type="submit" value="Guardar"/>
+                <a class="btn btn-danger ms-2" href="{% url 'productos' %}">Cancelar</a>
+            </div>
+        </div>
+    </div>
+</form>

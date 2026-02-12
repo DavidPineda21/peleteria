@@ -11,8 +11,8 @@
                 <i class="bi bi-house-door-fill"></i>&nbsp;Inicio
             </a>
             {% if perms.appTSM.add_clsproductos %}
-                <a name="" id="" class="btn btn-success btn-sm" title="Agregar" href="{% url 'crearProducto' %}" role="button">
-                    <i class="bi bi-file-earmark-plus-fill"></i>&nbsp;Agregar Producto
+                <a name="" id="" class="btn btn-success btn-sm" title="Agregar" href="{% url 'inicio' %}" role="button">
+                    <i class="bi bi-file-earmark-plus-fill"></i>&nbsp;Agregar Inventario
                 </a>
             {% endif %}
             {% if perms.appTSM.view_clsproductos %}
@@ -27,90 +27,107 @@
 
 
 
-            <div class="table-responsive">
-            <table id="tabla-productos" class="table">
-                <thead>
-                    <tr>
-                        <th class="text-center align-middle">ACCIONES</th>
-                        <th class="text-center align-middle">ID PRODUCTO</th>
-                        <th class="text-center align-middle">TIPO</th>
-                        <th class="text-center align-middle">NOMBRE</th>
-                        <th class="text-center align-middle">COLOR</th>
-                        <th class="text-center align-middle">DESCRIPCION</th>
-                        <th class="text-center align-middle">PRECIO</th>
-                        <th class="text-center align-middle">PRECIO X METRO</th>
-                        <th class="text-center align-middle">STOCK</th>
+        <div class="w-100 p-0 m-0">
+            <div class="w-100 p-0 m-0">
 
-                    </tr>
-                    <tr>
-                        <th></th>
-                        <th></th>
-                        <th class="text-center align-middle">
-                            <div class="dropdown" data-bs-display="static">
-                                <button class="filtrosapiselect dropdown-toggle" type="button" id="filtro-tipoproducto" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Selecciona tipo Producto
-                                </button>
-                                <ul class="dropdown-menu dropdownfiltro" aria-labelledby="dropdowntipoproducto" style="max-height: 200px; overflow-y: auto;">
-                                    {% for tipoproducto in tipoproductos %}
+                <div class="card shadow-sm border-0">
+                    <div class="card-body">
+            
+                        <div class="row g-3 align-items-center">
+            
+                            <!-- Tipo Producto -->
+                            <div class="col-12 col-md-4">
+                                <label class="form-label fw-semibold">Tipo de Producto</label>
+                                <div class="dropdown w-100" data-bs-display="static">
+                                    <button class="btn btn-outline-dark dropdown-toggle w-100 text-start"
+                                            type="button"
+                                            id="filtro-tipoproducto"
+                                            data-bs-toggle="dropdown">
+                                        Selecciona tipo Producto
+                                    </button>
+                                    <ul class="dropdown-menu w-100" style="max-height:200px; overflow-y:auto;">
+                                        {% for tipoproducto in tipoproductos %}
                                         <li>
                                             <label class="dropdown-item">
-                                                <input type="checkbox" class="form-check-input me-2 filtro-tipoproducto" value="{{ tipoproducto }}"> {{ tipoproducto }}
+                                                <input type="checkbox"
+                                                       class="form-check-input me-2 filtro-tipoproducto"
+                                                       value="{{ tipoproducto }}">
+                                                {{ tipoproducto }}
                                             </label>
                                         </li>
-                                    {% endfor %}
-                                </ul>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
                             </div>
-                        </th>
-                        <th></th>
-                        <th class="text-center align-middle">
-                            <div class="dropdown" data-bs-display="static">
-                                <button class="filtrosapiselect dropdown-toggle" type="button" id="filtro-color" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Selecciona color
-                                </button>
-                                <ul class="dropdown-menu dropdownfiltro" aria-labelledby="dropdowncolor" style="max-height: 200px; overflow-y: auto;">
-                                    {% for color in colores %}
+            
+                            <!-- Color -->
+                            <div class="col-12 col-md-4">
+                                <label class="form-label fw-semibold">Color</label>
+                                <div class="dropdown w-100" data-bs-display="static">
+                                    <button class="btn btn-outline-dark dropdown-toggle w-100 text-start"
+                                            type="button"
+                                            id="filtro-color"
+                                            data-bs-toggle="dropdown">
+                                        Selecciona color
+                                    </button>
+                                    <ul class="dropdown-menu w-100" style="max-height:200px; overflow-y:auto;">
+                                        {% for color in colores %}
                                         <li>
                                             <label class="dropdown-item">
-                                                <input type="checkbox" class="form-check-input me-2 filtro-color" value="{{ color }}"> {{ color }}
+                                                <input type="checkbox"
+                                                       class="form-check-input me-2 filtro-color"
+                                                       value="{{ color }}">
+                                                {{ color }}
                                             </label>
                                         </li>
-                                    {% endfor %}
-                                </ul>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
                             </div>
-                        </th>
-                        <th></th>
-                        <th></th>
-                        <th class="text-center align-middle">
-                            <div class="dropdown" data-bs-display="static">
-                                <button class="filtrosapiselect dropdown-toggle" type="button" id="filtro-precioxm" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Selecciona precio por metro
-                                </button>
-                                <ul class="dropdown-menu dropdownfiltro" aria-labelledby="dropdownprecioxm" style="max-height: 200px; overflow-y: auto;">
-                                    {% for precioxm in precioxms %}
+            
+                            <!-- Precio por Metro -->
+                            <div class="col-12 col-md-4">
+                                <label class="form-label fw-semibold">Precio por Metro</label>
+                                <div class="dropdown w-100" data-bs-display="static">
+                                    <button class="btn btn-outline-dark dropdown-toggle w-100 text-start"
+                                            type="button"
+                                            id="filtro-precioxm"
+                                            data-bs-toggle="dropdown">
+                                        Selecciona precio por metro
+                                    </button>
+                                    <ul class="dropdown-menu w-100" style="max-height:200px; overflow-y:auto;">
+                                        {% for precioxm in precioxms %}
                                         <li>
                                             <label class="dropdown-item">
-                                                <input type="checkbox" class="form-check-input me-2 filtro-precioxm" value="{{ precioxm }}"> {{ precioxm }}
+                                                <input type="checkbox"
+                                                       class="form-check-input me-2 filtro-precioxm"
+                                                       value="{{ precioxm }}">
+                                                {{ precioxm }}
                                             </label>
                                         </li>
-                                    {% endfor %}
-                                </ul>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
                             </div>
-                        </th>
-                        <th></th>
-                    </tr>           
-                </thead>
-                <tbody>
-                    <!-- Aquí se cargan los datos -->
-                </tbody>
-            </table>
+            
+            
+                        </div>
+            
+                    </div>
+                </div>
+            <div id="productos-grid" class="row g-4 mx-0 mb-4 mt-2">
+                <!-- Aquí se cargan las cards -->
+            </div>
+        </div>
         </div>
         <div id="paginador"></div>
 
     <script>
+        
         const puedeEditar = {{ perms.appTSM.change_clsproductos|yesno:"true,false" }};
         const puedeEliminar = {{ perms.appTSM.delete_clsproductos|yesno:"true,false" }};
         let pagina = 1;
-        const tabla = document.querySelector("#tabla-productos tbody");
+        const grid = document.getElementById("productos-grid");
         const paginadorDiv = document.getElementById("paginador");
 
         function cargarProducto(p = pagina) {
@@ -137,87 +154,97 @@
             fetch(`/productos/api/${params}`)
                 .then(res => res.json())
                 .then(data => {
-                    tabla.innerHTML = "";
+                    grid.innerHTML = "";
                     document.getElementById("total-resultados").textContent = data.total;
                     data.datos.forEach(productos => {
-                    console.log(productos.fotos);
-                    const fila = document.createElement("tr");
-                    let botones = '';
+
+                        let botones = '';
                         if (puedeEditar) {
                             botones += `
-                                <a class="btn btn-icon-custom" title="Editar" href="/productos/editar/${productos.idproducto}" role="button">
-                                    <img src="{% static 'img/imgIconEdit.png' %}" alt="Editar" class="icono-btn">
+                                <a class="btn btn-sm btn-light me-1" 
+                                href="/inventario/activo/pendiente/editar/${productos.idproducto}">
+                                ✏️
                                 </a>
                             `;
                         }
                         if (puedeEliminar) {
                             botones += `
-                                <button type="button" class="btn btn-icon-custom" data-bs-toggle="modal" title="Eliminar" data-bs-target="#modalEliminar${productos.idproducto}">
-                                    <img src="{% static 'img/imgIconDelete.png' %}" alt="Eliminar" class="icono-btn">
+                                <button class="btn btn-sm btn-light">
+                                    🗑️
                                 </button>
                             `;
                         }
 
-                        fila.innerHTML = `
-                            <td class="text-center align-middle">
-                                <div class="btn-group">
-                                    ${botones}
+                        // Slider imágenes
+                        let imagenes = '';
+                        if (productos.fotos.length > 0) {
+                            productos.fotos.forEach((foto, index) => {
+                                imagenes += `
+                                    <div class="carousel-item ${index === 0 ? 'active' : ''}">
+                                        <img src="${foto}" class="d-block w-100 img-card-producto">
+                                    </div>
+                                `;
+                            });
+                        } else {
+                            imagenes = `
+                                <div class="carousel-item active">
+                                    <img src="{% static 'img/no-image.png' %}" class="d-block w-100 img-card-producto">
                                 </div>
-                            </td>
-                            <td>${productos.idproducto}</td>
-                            <td>${productos.tipoproducto}</td>
-                            <td>${productos.nombre}</td>
-                            <td>${productos.color}</td>
-                            <td>${productos.descripcion}</td>
-                            <td>${productos.precio}</td>
-                            <td>${productos.precioxm}</td>
-                            <td>${productos.stock}</td>
-                        `;
-                        tabla.appendChild(fila);
+                            `;
+                        }
 
-                        // Crear modal dinámicamente
-                        const modal = document.createElement('div');
-                        modal.className = 'modal fade';
-                        modal.id = `modalEliminar${productos.idproducto}`;
-                        modal.setAttribute('tabindex', '-1');
-                        modal.setAttribute('aria-hidden', 'true');
-                        modal.innerHTML = `
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title">Eliminar</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        const card = document.createElement("div");
+                        card.className = "col-12 col-sm-6 col-md-4 col-lg-3";
+
+                        card.innerHTML = `
+                            <div class="card h-100 shadow-sm border-0 producto-card">
+                                
+                                <div id="carousel${productos.idproducto}" 
+                                    class="carousel slide">
+                                    <div class="carousel-inner">
+                                        ${imagenes}
                                     </div>
-                                    <div class="modal-body">
-                                        ¿Está seguro de eliminar el producto: ${productos.idproducto} - ${productos.nombre}?
-                                    </div>
-                                    <div class="modal-footer">  
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>                                        
-                                        <form method="post" action="/inventario/activo/pendiente/eliminar/${productos.idproducto}" style="display:inline;">    
-                                            {% csrf_token %}
-                                            <button type="submit" class="btn btn-danger">Eliminar</button>
-                                        </form>
-                                    </div>
+                                    ${productos.fotos.length > 1 ? `
+                                    <button class="carousel-control-prev" type="button" 
+                                            data-bs-target="#carousel${productos.idproducto}" 
+                                            data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon"></span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button" 
+                                            data-bs-target="#carousel${productos.idproducto}" 
+                                            data-bs-slide="next">
+                                        <span class="carousel-control-next-icon"></span>
+                                    </button>
+                                    ` : ''}
+                                </div>
+
+                                <div class="card-body">
+                                    <h6 class="fw-bold">${productos.nombre}</h6>
+                                    <small class="text-muted">${productos.tipoproducto}</small>
+                                    <p class="mb-1 mt-2">
+                                        <strong>$${productos.precio}</strong>
+                                    </p>
+                                    <small>Stock: ${productos.stock}</small>
+                                </div>
+
+                                <div class="card-footer bg-white border-0 text-end">
+                                    ${botones}
                                 </div>
                             </div>
                         `;
-                        document.body.appendChild(modal);
+
+                        grid.appendChild(card);
                     });
 
-                // Llamar a la función de expansión después de cargar los datos
-                document.querySelectorAll('#tabla-productos td:not(.text-center):not(.no-expand)').forEach(cell => {
-                    if (cell.scrollWidth > cell.clientWidth) {
-                        cell.title = "Click para expandir/contraer";
-                        cell.style.cursor = "pointer";
-                        cell.addEventListener('click', () => {
-                            cell.classList.toggle('expanded');
-                            if (cell.classList.contains('expanded')) {
-                                cell.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                            }
-                        });
-                    }
-                });
-
+                    // 🔥 Inicializar carouseles después de renderizar
+document.querySelectorAll('#productos-grid .carousel').forEach(carouselEl => {
+    new bootstrap.Carousel(carouselEl, {
+        interval: 6000,
+        ride: 'carousel',
+        pause: false,
+        wrap: true
+    });
+});
                     // Paginador
                     paginadorDiv.innerHTML = `
                             <div aria-label="Page navigation">
