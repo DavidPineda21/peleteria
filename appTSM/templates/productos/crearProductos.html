@@ -4,11 +4,134 @@
 {% block contenido %}
 
 <div class="card">
-    <h4><div class="card-header">Crear Producto</div></h4>
+    <h4>
+        <div class="card-header">
+            {% if producto %}Editar Producto{% else %}Crear Producto{% endif %}
+        </div>
+    </h4>
+
     <div class="card-body">
         {% include 'loader.html' %}
         {% include 'productos/formProductos.html' %}
+
+        {# 👇 SOLO EN EDICIÓN #}
+        {% if producto and imagenes %}
+            <hr>
+            <h6 class="fw-bold">Imágenes del producto</h6>
+
+            <div class="row">
+                {% for img in imagenes %}
+                    <div class="col-6 col-md-3 col-lg-2 mb-3">
+                        <div class="position-relative border rounded p-1">
+
+                            <!-- Imagen -->
+                            <img src="{{ img.url }}"
+                                class="img-fluid rounded"
+                                style="height: 120px; object-fit: cover; width: 100%;">
+
+                        {% if 'barcode' in img.nombre|lower %}
+                            <!-- Botón imprimir -->
+                            <button type="button"
+                                    class="btn btn-primary btn-sm position-absolute top-0 end-0 m-1"
+                                    title="Imprimir código de barras"
+                                    onclick="imprimirImagen('{{ img.url }}')">
+                                🖨️
+                            </button>
+                        {% else %}
+                            <!-- Botón eliminar -->
+                            <button type="button"
+                                    class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1 btn-eliminar-imagen"
+                                    data-url="{% url 'eliminarImagenProducto' producto.idproducto img.nombre %}"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalEliminarImagen"
+                                    title="Eliminar imagen">
+                                ✕
+                            </button>
+                        {% endif %}
+
+                        </div>
+                    </div>
+                    <!-- Modal Confirmación Eliminar Imagen -->
+                    <div class="modal fade" id="modalEliminarImagen" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-sm">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <h5 class="modal-title text-danger">Eliminar imagen</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+
+                                <div class="modal-body text-center">
+                                    <p class="mb-0">
+                                        ¿Estás seguro de eliminar esta imagen?
+                                    </p>
+                                </div>
+
+                                <div class="modal-footer justify-content-center">
+                                    <button type="button"
+                                            class="btn btn-secondary btn-sm"
+                                            data-bs-dismiss="modal">
+                                        Cancelar
+                                    </button>
+
+                                    <a href="#"
+                                    id="btn-confirmar-eliminar"
+                                    class="btn btn-danger btn-sm">
+                                        Sí, eliminar
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        let urlEliminar = '';
+
+        document.querySelectorAll('.btn-eliminar-imagen').forEach(btn => {
+            btn.addEventListener('click', function () {
+                urlEliminar = this.dataset.url;
+                document.getElementById('btn-confirmar-eliminar').href = urlEliminar;
+            });
+        });
+
+    });
+
+    function imprimirImagen(url) {
+        const ventana = window.open('', '_blank', 'width=400,height=300');
+
+        ventana.document.write(`
+            <html>
+                <head>
+                    <title>Imprimir código de barras</title>
+                    <style>
+                        body {
+                            margin: 0;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            height: 100vh;
+                        }
+                        img {
+                            max-width: 100%;
+                            max-height: 100%;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <img src="${url}" onload="window.print(); window.close();">
+                </body>
+            </html>
+        `);
+
+        ventana.document.close();
+    }
+</script>
 
 {% endblock %}

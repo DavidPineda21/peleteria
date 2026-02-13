@@ -11,7 +11,7 @@
                 <i class="bi bi-house-door-fill"></i>&nbsp;Inicio
             </a>
             {% if perms.appTSM.add_clsproductos %}
-                <a name="" id="" class="btn btn-success btn-sm" title="Agregar" href="{% url 'inicio' %}" role="button">
+                <a name="" id="" class="btn btn-success btn-sm" title="Agregar" href="{% url 'crearProducto' %}" role="button">
                     <i class="bi bi-file-earmark-plus-fill"></i>&nbsp;Agregar Inventario
                 </a>
             {% endif %}
@@ -162,7 +162,7 @@
                         if (puedeEditar) {
                             botones += `
                                 <a class="btn btn-sm btn-light me-1" 
-                                href="/inventario/activo/pendiente/editar/${productos.idproducto}">
+                                href="/productos/editar/${productos.idproducto}">
                                 ✏️
                                 </a>
                             `;

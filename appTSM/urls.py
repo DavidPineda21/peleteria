@@ -12,5 +12,7 @@ urlpatterns = [
     path('productos/api/',views.productos_api,name='productos_api'),
     path('productos/crear',views.crearProducto,name='crearProducto'),
     path('productos/editar/<str:idproducto>',views.editarProducto,name='editarProducto'),
+    path('productos/<int:idproducto>/eliminar-imagen/<str:nombre>',views.eliminarImagenProducto,name='eliminarImagenProducto'
+)
 
 ]

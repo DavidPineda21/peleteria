@@ -40,7 +40,7 @@
         <!-- Navbar -->
         <nav>
             <div class="logo">
-                <a href="{% url 'index' %}">
+                <a href="{% url 'inicio' %}">
                     <img src="{% static 'login/img/images.png' %}" alt="Logo" class="logo-img">
                 </a>
             </div>
@@ -245,6 +245,9 @@
             <div class="navbar-title-center">
                 {% block tituloNav %}   {% endblock %}
             </div>
+
+
+            <div class="{% if not user.is_authenticated %}d-none{% endif %} auth-wrapper">
             <!-- Icono de Notificaciones -->
             <div class="notification-icon" id="notificationIcon">
                 <i class="bi bi-bell"></i>
@@ -298,10 +301,12 @@
                     </div>
                 </div>
             </div>
+            
+            
 
             <div class="user-section" id="userSection">
-                <!-- <span class="user-name">{{ request.session.nombre }}</span>
-                <div class="profile-icon">{{ request.session.iniciales }}</div> -->
+                <span class="user-name">{{ request.session.nombre }}</span>
+                <div class="profile-icon">{{ request.session.iniciales }}</div>
                 
                 <!-- Dropdown Menu -->
                 <div class="user-dropdown-menu" id="dropdownMenu">
@@ -319,12 +324,15 @@
                     </a>
                 </div>
             </div>
+            
+        </div>
 
             <div class="hamburger" id="hamburger">
                 <span></span>
                 <span></span>
                 <span></span>
             </div>
+
         </nav>
 
         {% include 'mensajes.html' %}

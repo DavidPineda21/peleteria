@@ -12,6 +12,9 @@ from django.conf import settings
 import logging
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
+import os
+from barcode import Code128
+from barcode.writer import ImageWriter
 
 from .models import clsProductos
 
@@ -33,24 +36,24 @@ def inicio(request):
         grupo = Group.objects.get(name="administrador")
         usuariosDjango = grupo.user_set.all()
         nombreUsuario = request.session.get('nombre')
-        for user in usuariosDjango:
-            Notification.objects.create(
-            recipient=user,
-            actor=request.user,
-            verb="",
-            description=f"{nombreUsuario} ha realizado una nueva solicitud de equipos, Haga clic aquí para verla",
-            data={"url": reverse("index")}
-        )
+        # for user in usuariosDjango:
+        #     Notification.objects.create(
+        #     recipient=user,
+        #     actor=request.user,
+        #     verb="",
+        #     description=f"{nombreUsuario} ha realizado una nueva solicitud de equipos, Haga clic aquí para verla",
+        #     data={"url": reverse("index")}
+        # )
 
         
     except User.DoesNotExist:
         print("ERROR: User not found in the database.")
-    messages.success(request, 'espacio desactivado correctamente.')
     return render(request, 'inicio.html')
 
 
 
-# @permisosRequeridos('appTSM.view_clsactivostipendientes')
+# @login_required
+@permisosRequeridos('appTSM.view_clsproductos')
 def productos(request):
     tipoproducto = list(clsProductos.objects.values_list("tipoproducto", flat=True).distinct())
     color = list(clsProductos.objects.values_list("color", flat=True).distinct())
@@ -66,7 +69,10 @@ def productos(request):
 # @permisosRequeridos('appTSM.view_clsactivostipendientes')
 def productos_api(request):
     page = int(request.GET.get('page', 1))
-    productos = clsProductos.objects.all().order_by('idproducto')
+    if request.user.groups.filter(name__in=['administrador']).exists():
+        productos = clsProductos.objects.all().order_by('idproducto')
+    else:
+        productos = clsProductos.objects.filter(stock__gt=0).order_by('idproducto')
 
     # Filtros acumulables
     tipoproducto = [f for f in request.GET.getlist('tipoproducto') if f.strip()]
@@ -109,7 +115,7 @@ def productos_api(request):
         if os.path.isdir(carpeta_fotos):
             archivos = os.listdir(carpeta_fotos)
             for archivo in archivos:
-                if archivo.lower().endswith(('.png', '.jpg', '.jpeg', '.webp')):
+                if archivo.lower().endswith(('.png', '.jpg', '.jpeg', '.webp')) and 'barcode' not in archivo.lower():
                     # URL pública para el navegador
                     url = f"{settings.MEDIA_URL}{producto.idproducto}/{archivo}"
                     producto_dict['fotos'].append(url)
@@ -126,7 +132,7 @@ def productos_api(request):
     })
 
 
-    # @permisosRequeridos('appTSM.view_clsactivostipendientes')
+
 def productosPublico(request):
     tipoproducto = list(clsProductos.objects.values_list("tipoproducto", flat=True).distinct())
     color = list(clsProductos.objects.values_list("color", flat=True).distinct())
@@ -140,7 +146,7 @@ def productosPublico(request):
     return render(request, 'productos/productoscliente.html', filtros)
 
 
-# @permisosRequeridos('appTSM.add_clsproductos')
+@permisosRequeridos('appTSM.add_clsproductos')
 def crearProducto(request):
     if request.method == 'POST':
         formulario = frmProductos(request.POST, request.FILES)
@@ -156,6 +162,28 @@ def crearProducto(request):
                 )
 
                 os.makedirs(ruta_producto, exist_ok=True)
+
+                # 3️⃣ Generar código de barras
+                codigo = Code128(
+                    str(producto.idproducto),
+                    writer=ImageWriter()
+                )
+
+                ruta_barcode = os.path.join(
+                    ruta_producto,
+                    f'barcode_{producto.idproducto}'
+                )
+
+                codigo.save(
+                    ruta_barcode,
+                    {
+                        'module_width': 0.2,
+                        'module_height': 15,
+                        'font_size': 10,
+                        'text_distance': 5,
+                        'quiet_zone': 6,
+                    }
+                )
 
                 # 3️⃣ Obtener imágenes del formulario
                 imagenes = request.FILES.getlist('imagenes')
@@ -178,7 +206,7 @@ def crearProducto(request):
                     )
 
                 messages.success(request, 'Producto creado correctamente.')
-                return redirect('productos')
+                return redirect('productosPublico')
 
             except Exception as e:
                 messages.error(request, f'Error al intentar crear el producto: {str(e)}')
@@ -196,7 +224,7 @@ def crearProducto(request):
     return render(request, 'productos/crearProductos.html', context)
 
 
-# @permisosRequeridos('appTSM.change_clsproductos')
+@permisosRequeridos('appTSM.change_clsproductos')
 def editarProducto(request, idproducto):
 
     producto = get_object_or_404(clsProductos, idproducto=idproducto)
@@ -211,12 +239,14 @@ def editarProducto(request, idproducto):
 
     # 📷 Listar imágenes existentes
     imagenes_existentes = []
+
     if os.path.exists(ruta_producto):
-        imagenes_existentes = [
-            f"{producto.idproducto}/{archivo}"
-            for archivo in os.listdir(ruta_producto)
-            if archivo.lower().endswith(('.png', '.jpg', '.jpeg', '.webp'))
-        ]
+        for archivo in os.listdir(ruta_producto):
+            if archivo.lower().endswith(('.png', '.jpg', '.jpeg', '.webp')):
+                imagenes_existentes.append({
+                    'url': f"{settings.MEDIA_URL}{producto.idproducto}/{archivo}",
+                    'nombre': archivo
+                })
 
     if request.method == 'POST':
         formulario = frmProductos(
@@ -248,7 +278,7 @@ def editarProducto(request, idproducto):
                     )
 
                 messages.success(request, 'Producto actualizado correctamente.')
-                return redirect('productos')
+                return redirect('productosPublico')
 
             except Exception as e:
                 messages.error(request, f'Error al actualizar el producto: {str(e)}')
@@ -263,7 +293,30 @@ def editarProducto(request, idproducto):
     context = {
         'form': formulario,
         'producto': producto,
-        'imagenes': imagenes_existentes
+        'imagenes': imagenes_existentes,
+        'MEDIA_URL': settings.MEDIA_URL,  # 👈 CLAVE
     }
 
     return render(request, 'productos/crearProductos.html', context)
+
+
+@permisosRequeridos('appTSM.change_clsproductos')
+def eliminarImagenProducto(request, idproducto, nombre):
+
+    ruta_imagen = os.path.join(
+        settings.MEDIA_ROOT,
+        str(idproducto),
+        nombre
+    )
+
+    try:
+        if os.path.exists(ruta_imagen):
+            os.remove(ruta_imagen)
+            messages.success(request, 'Imagen eliminada correctamente.')
+        else:
+            messages.error(request, 'La imagen no existe.')
+
+    except Exception as e:
+        messages.error(request, f'Error al eliminar la imagen: {str(e)}')
+
+    return redirect('editarProducto', idproducto=idproducto)

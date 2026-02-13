@@ -694,6 +694,7 @@ nav::before {
     gap: 5px;
     cursor: pointer;
     padding: 10px;
+    margin-left: auto; /* 👈 lo manda a la derecha */
 }
 
 .hamburger span {
@@ -1855,3 +1856,8 @@ select.form-control, select.form-select, .select2-selection__rendered {
 
 /* FIN CSS BOTONES BOOTSTRAP MODERNOS */
 /* ############################################################################################################################ */
+
+
+.auth-wrapper {
+    display: contents;
+}
