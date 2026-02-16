@@ -12,7 +12,9 @@ urlpatterns = [
     path('productos/api/',views.productos_api,name='productos_api'),
     path('productos/crear',views.crearProducto,name='crearProducto'),
     path('productos/editar/<str:idproducto>',views.editarProducto,name='editarProducto'),
-    path('productos/<int:idproducto>/eliminar-imagen/<str:nombre>',views.eliminarImagenProducto,name='eliminarImagenProducto'
-)
+    path('productos/<int:idproducto>/eliminar-imagen/<str:nombre>',views.eliminarImagenProducto,name='eliminarImagenProducto'),
+    path('registrarVenta', views.registrarVenta, name='registrarVenta'),
+    path('buscar-producto/', views.buscarProductoPorCodigo, name='buscarProducto'),
+    path('imprimir-venta/<int:venta_id>/', views.imprimirVenta, name='imprimirVenta'),
 
 ]

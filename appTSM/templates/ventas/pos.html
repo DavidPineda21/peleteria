@@ -1,0 +1,208 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Punto de Venta</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+            background: #f5f5f5;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        #codigoInput {
+            width: 300px;
+            padding: 10px;
+            font-size: 18px;
+        }
+
+        table {
+            width: 100%;
+            background: white;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background: #333;
+            color: white;
+        }
+
+        .btn {
+            padding: 10px 15px;
+            cursor: pointer;
+            border: none;
+            font-weight: bold;
+        }
+
+        .btn-danger {
+            background: red;
+            color: white;
+        }
+
+        .btn-success {
+            background: green;
+            color: white;
+            margin-top: 20px;
+        }
+
+        #total {
+            font-size: 22px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .mensaje {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+<body>
+
+<h2>Punto de Venta</h2>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="mensaje">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+
+<input type="text" id="codigoInput" placeholder="Escanear código..." autofocus>
+
+<form method="POST" id="formVenta">
+    {% csrf_token %}
+
+    <table id="tablaProductos">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Subtotal</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <div id="total">Total: $0</div>
+
+    <button type="submit" class="btn btn-success">
+        Registrar Venta
+    </button>
+</form>
+
+<script>
+const input = document.getElementById("codigoInput");
+const tabla = document.querySelector("#tablaProductos tbody");
+const totalDiv = document.getElementById("total");
+
+let productos = {};
+
+input.addEventListener("change", function () {
+    const codigo = input.value.trim();
+    if (!codigo) return;
+
+    fetch(`/buscar-producto/?codigo=${codigo}`)
+        .then(response => response.json())
+        .then(data => {
+
+            if (data.error) {
+                alert(data.error);
+                input.value = "";
+                return;
+            }
+
+            if (productos[data.id]) {
+                productos[data.id].cantidad++;
+                actualizarFila(data.id);
+            } else {
+                productos[data.id] = {
+                    nombre: data.nombre,
+                    precio: parseFloat(data.precio),
+                    cantidad: 1
+                };
+                agregarFila(data.id);
+            }
+
+            calcularTotal();
+            input.value = "";
+        });
+});
+
+function agregarFila(id) {
+
+    const producto = productos[id];
+
+    const fila = document.createElement("tr");
+    fila.setAttribute("id", "fila_" + id);
+
+    fila.innerHTML = `
+        <td>${producto.nombre}
+            <input type="hidden" name="producto_id[]" value="${id}">
+        </td>
+        <td>$${producto.precio}</td>
+        <td>
+            <input type="number" name="cantidad[]" value="1" min="1"
+                onchange="cambiarCantidad(${id}, this.value)">
+        </td>
+        <td id="subtotal_${id}">$${producto.precio}</td>
+        <td>
+            <button type="button" class="btn btn-danger"
+                onclick="eliminarProducto(${id})">X</button>
+        </td>
+    `;
+
+    tabla.appendChild(fila);
+}
+
+function actualizarFila(id) {
+    const producto = productos[id];
+    const inputCantidad = document.querySelector(`#fila_${id} input[type='number']`);
+    inputCantidad.value = producto.cantidad;
+
+    document.getElementById(`subtotal_${id}`).innerText =
+        "$" + (producto.precio * producto.cantidad);
+}
+
+function cambiarCantidad(id, nuevaCantidad) {
+    productos[id].cantidad = parseInt(nuevaCantidad);
+    actualizarFila(id);
+    calcularTotal();
+}
+
+function eliminarProducto(id) {
+    delete productos[id];
+    document.getElementById("fila_" + id).remove();
+    calcularTotal();
+}
+
+function calcularTotal() {
+    let total = 0;
+
+    for (let id in productos) {
+        total += productos[id].precio * productos[id].cantidad;
+    }
+
+    totalDiv.innerText = "Total: $" + total.toFixed(2);
+}
+
+</script>
+
+</body>
+</html>

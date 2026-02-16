@@ -15,8 +15,13 @@ from django.core.files.base import ContentFile
 import os
 from barcode import Code128
 from barcode.writer import ImageWriter
+from django.db import transaction
+from django.template.loader import render_to_string
 
 from .models import clsProductos
+from .models import clsVentas
+from .models import clsDetalleVenta
+from appBase.models import clsUsuarios
 
 
 from .forms import frmProductos
@@ -91,7 +96,7 @@ def productos_api(request):
         productos.values_list('idproducto', flat=True)
     )
 
-    paginator = Paginator(productos, 15)
+    paginator = Paginator(productos, 4)
     page_obj = paginator.get_page(page)
 
     productos_list = []
@@ -320,3 +325,112 @@ def eliminarImagenProducto(request, idproducto, nombre):
         messages.error(request, f'Error al eliminar la imagen: {str(e)}')
 
     return redirect('editarProducto', idproducto=idproducto)
+
+
+@permisosRequeridos('appTSM.add_clsventas')
+def buscarProductoPorCodigo(request):
+    codigo = request.GET.get('codigo')
+
+    try:
+        producto = clsProductos.objects.get(idproducto=codigo)
+
+        return JsonResponse({
+            "id": producto.idproducto,
+            "nombre": producto.nombre,
+            "precio": float(producto.precio or 0),
+            "stock": producto.stock or 0
+        })
+
+    except clsProductos.DoesNotExist:
+        return JsonResponse({"error": "Producto no encontrado"})
+
+
+@permisosRequeridos('appTSM.add_clsventas')
+@transaction.atomic
+def registrarVenta(request):
+
+    if request.method == "POST":
+        try:
+            usuario = get_object_or_404(
+                clsUsuarios,
+                idusuario=request.user.username
+            )
+
+            productos = request.POST.getlist('producto_id[]')
+            cantidades = request.POST.getlist('cantidad[]')
+
+            productos_obj = []
+            total_venta = 0
+
+            for producto_id, cantidad in zip(productos, cantidades):
+
+                producto = clsProductos.objects.select_for_update().get(
+                    idproducto=producto_id
+                )
+
+                cantidad = int(cantidad)
+
+                if (producto.stock or 0) < cantidad:
+                    raise ValueError(
+                        f"Stock insuficiente para {producto.nombre}"
+                    )
+
+                productos_obj.append((producto, cantidad))
+
+            venta = clsVentas.objects.create(idusuario=usuario)
+
+            for producto, cantidad in productos_obj:
+
+                precio = producto.precio or 0
+                subtotal = precio * cantidad
+
+                clsDetalleVenta.objects.create(
+                    idventa=venta,
+                    idproducto=producto,
+                    cantidad=cantidad,
+                    precio_unitario=precio,
+                    subtotal=subtotal
+                )
+
+                producto.stock -= cantidad
+                producto.save()
+
+                total_venta += subtotal
+
+            venta.total = total_venta
+            venta.save()
+            messages.success(request, 'Venta registrada correctamente.')
+
+            # 🔥 Renderizamos el ticket como string
+            detalles = clsDetalleVenta.objects.filter(idventa=venta)
+
+            ticket_html = render_to_string(
+                "ventas/ticket.html",
+                {
+                    "venta": venta,
+                    "detalles": detalles
+                }
+            )
+
+            return JsonResponse({
+                "success": True,
+                "ticket": ticket_html
+            })
+
+        except Exception as e:
+            return JsonResponse({
+                "success": False,
+                "error": str(e)
+            })
+
+    return render(request, "ventas/RegistrarVenta.html")
+
+def imprimirVenta(request, venta_id):
+
+    venta = get_object_or_404(clsVentas, idventa=venta_id)
+    detalles = clsDetalleVenta.objects.filter(idventa=venta)
+
+    return render(request, "ventas/ticket.html", {
+        "venta": venta,
+        "detalles": detalles
+    })

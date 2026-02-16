@@ -1,0 +1,261 @@
+{% extends 'base.html' %}
+{% block titulo %}Registrar Venta{% endblock %}
+{% block contenido %}
+
+{% include 'loader.html' %}
+
+
+
+<div class="card">
+    <h4>
+        <div class="card-header">
+            Registrar Venta
+        </div>
+    </h4>
+
+    <div class="card-body">
+
+
+
+    <input type="text" id="codigoInput" placeholder="Escanear código..." autofocus>
+
+    <form method="POST" id="formVenta">
+        {% csrf_token %}
+
+        <div class="table-responsive">
+            <table id="tablaProductos" class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Precio</th>
+                        <th>Cantidad</th>
+                        <th>Subtotal</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div id="total">Total: $0</div>
+        <br>
+
+        <button type="submit" class="btn btn-success">
+            Registrar Venta
+        </button>
+    </form>
+    </div>
+</div>
+
+
+
+<script>
+    const input = document.getElementById("codigoInput");
+    const tabla = document.querySelector("#tablaProductos tbody");
+    const totalDiv = document.getElementById("total");
+    const btnRegistrar = document.querySelector("button[type='submit']");
+    
+    let productos = {};
+    
+    input.addEventListener("change", function () {
+        const codigo = input.value.trim();
+        if (!codigo) return;
+    
+        fetch(`/buscar-producto/?codigo=${codigo}`)
+            .then(response => response.json())
+            .then(data => {
+    
+                if (data.error) {
+                    alert(data.error);
+                    input.value = "";
+                    return;
+                }
+    
+                if (productos[data.id]) {
+                    productos[data.id].cantidad++;
+                    actualizarFila(data.id);
+                } else {
+                    productos[data.id] = {
+                    nombre: data.nombre,
+                    precio: parseFloat(data.precio),
+                    stock: parseInt(data.stock),
+                    cantidad: 1,
+                    stockError: false
+                };
+                    agregarFila(data.id);
+                }
+    
+                validarStock(data.id);
+                calcularTotal();
+                input.value = "";
+            });
+    });
+    
+    function agregarFila(id) {
+    
+        const producto = productos[id];
+    
+        const fila = document.createElement("tr");
+        fila.setAttribute("id", "fila_" + id);
+    
+        fila.innerHTML = `
+            <td>${producto.nombre}
+                <input type="hidden" name="producto_id[]" value="${id}">
+            </td>
+            <td>$${producto.precio}</td>
+            <td>
+                <input type="number" 
+                    name="cantidad[]" 
+                    value="1" 
+                    min="1"
+                    step="1"
+                    oninput="cambiarCantidad(${id}, this)">
+            </td>
+            <td id="subtotal_${id}">$${producto.precio}</td>
+            <td>
+                <button type="button" class="btn btn-danger"
+                    onclick="eliminarProducto(${id})">X</button>
+            </td>
+        `;
+    
+        tabla.appendChild(fila);
+    }
+    
+    function actualizarFila(id) {
+        const producto = productos[id];
+        const inputCantidad = document.querySelector(`#fila_${id} input[type='number']`);
+        inputCantidad.value = producto.cantidad;
+    
+        document.getElementById(`subtotal_${id}`).innerText =
+            "$" + (producto.precio * producto.cantidad);
+    
+        validarStock(id);
+    }
+    
+    function cambiarCantidad(id, input) {
+
+    let nuevaCantidad = parseInt(input.value);
+
+    // Si es inválido o menor que 1, lo corregimos automáticamente
+    if (isNaN(nuevaCantidad) || nuevaCantidad < 1) {
+        nuevaCantidad = 1;
+        input.value = 1;
+    }
+
+    productos[id].cantidad = nuevaCantidad;
+
+    actualizarFila(id);
+    validarStock(id);
+    calcularTotal();
+    }
+    
+    function eliminarProducto(id) {
+        delete productos[id];
+        document.getElementById("fila_" + id).remove();
+        calcularTotal();
+        validarFormulario();
+    }
+    
+    function calcularTotal() {
+        let total = 0;
+    
+        for (let id in productos) {
+            total += productos[id].precio * productos[id].cantidad;
+        }
+    
+        totalDiv.innerText = "Total: $" + total.toFixed(2);
+    }
+    
+    function validarStock(id) {
+
+        const producto = productos[id];
+        const fila = document.getElementById("fila_" + id);
+
+        if (producto.cantidad > producto.stock) {
+            fila.classList.add("fila-error");
+            producto.stockError = true;
+        } else {
+            fila.classList.remove("fila-error");
+            producto.stockError = false;
+        }
+
+        validarFormulario();
+    }
+    
+    function validarFormulario() {
+
+        let hayError = false;
+
+        for (let id in productos) {
+
+            if (
+                productos[id].stockError ||
+                productos[id].cantidad < 1
+            ) {
+                hayError = true;
+                break;
+            }
+        }
+
+        btnRegistrar.disabled = hayError;
+        }
+
+        // 🔥 Envío AJAX para registrar e imprimir sin redirigir
+    document.getElementById("formVenta").addEventListener("submit", function(e) {
+
+    e.preventDefault();
+
+    // 🔎 No permitir enviar si no hay productos
+    if (Object.keys(productos).length === 0) {
+        alert("Agrega al menos un producto");
+        return;
+    }
+
+    const formData = new FormData(this);
+
+    fetch("", {
+        method: "POST",
+        body: formData,
+        headers: {
+            "X-Requested-With": "XMLHttpRequest"
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+
+        // 🔥 Ocultar loader SIEMPRE cuando responde
+        const loader = document.getElementById("loader");
+        if (loader) loader.style.display = "none";
+
+        if (data.success) {
+
+            const printWindow = window.open("", "", "width=350,height=600");
+
+printWindow.document.open();
+printWindow.document.write(data.ticket);
+printWindow.document.close();
+
+printWindow.focus();
+printWindow.print();
+
+// 🔁 Detectar cuando se cierre la ventana
+const checkWindow = setInterval(function() {
+    if (printWindow.closed) {
+        clearInterval(checkWindow);
+        location.reload();
+    }
+}, 500);
+        } else {
+            alert(data.error);
+        }
+
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("Ocurrió un error al registrar la venta.");
+    });
+
+    });
+    </script>
+
+{% endblock %}
