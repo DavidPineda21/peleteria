@@ -1,0 +1,21 @@
+#tablaProductos tr.fila-error td {
+    background-color: #f8d7da !important;
+    color: #842029 !important;
+}
+#codigoInput {
+    width: 300px;
+    padding: 10px;
+    font-size: 18px;
+}
+
+
+#tablaProductos th:nth-child(3),
+#tablaProductos td:nth-child(3) {
+    width: 90px;
+    text-align: start;
+}
+
+#tablaProductos input[type="number"] {
+    width: 70px;
+    text-align: start;
+}
